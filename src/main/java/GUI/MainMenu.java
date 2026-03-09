@@ -1,14 +1,16 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 
 public class MainMenu extends JFrame {
     JPanel panel;
     JLabel label;
-    JFileChooser chooser;
     JButton button;
+    JFileChooser chooser;
+    FileNameExtensionFilter filter;
     File file;
 
     public MainMenu() {
@@ -16,6 +18,10 @@ public class MainMenu extends JFrame {
         label = new JLabel("Выберите миссию:");
         button = new JButton("Открыть магический поисковик");
         chooser = new JFileChooser();
+        filter = new FileNameExtensionFilter("Доступные руны: json, txt, xml", "json", "txt", "xml");
+
+        chooser.addChoosableFileFilter(filter);
+        chooser.setFileFilter(filter);
 
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panel.setPreferredSize(new Dimension(260, 90));
@@ -51,7 +57,7 @@ public class MainMenu extends JFrame {
         getContentPane().add(panel);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setName("Локальный анализатор миссий");
+        setTitle("Локальный анализатор миссий");
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
