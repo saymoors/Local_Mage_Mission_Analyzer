@@ -23,9 +23,9 @@ public class MainMenu extends JFrame {
 
         button.addActionListener(e -> {
             try {
-                int result = chooser.showOpenDialog(this);
+                int choice = chooser.showOpenDialog(this);
 
-                if (result == JFileChooser.APPROVE_OPTION) {
+                if (choice == JFileChooser.APPROVE_OPTION) {
                     file = chooser.getSelectedFile();
                     JOptionPane.showMessageDialog(
                             this,
