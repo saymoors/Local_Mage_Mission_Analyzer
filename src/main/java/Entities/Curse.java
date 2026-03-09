@@ -13,7 +13,15 @@ public class Curse {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getThreatLevel() {
         return threatLevel;
+    }
+
+    public void setThreatLevel(String threatLevel) {
+        this.threatLevel = threatLevel;
     }
 }
