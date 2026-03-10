@@ -67,23 +67,17 @@ public class MainMenu extends JFrame {
     }
 
     private Mission parseSelectedFile(File file) throws Exception {
-        IParser parser;
         String fileName = file.getName();
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
 
-        switch(extension) {
-            case "json":
-                parser = new ParserJSON();
-                return parser.parse(file.getAbsolutePath());
-            case "xml":
-                parser = new ParserXML();
-                return parser.parse(file.getAbsolutePath());
-            case "txt":
-                parser = new ParserTXT();
-                return parser.parse(file.getAbsolutePath());
-            default:
-                throw new Exception("Вы выбрали иную руну!");
-        }
+        IParser parser = switch (extension) {
+            case "json" -> new ParserJSON();
+            case "xml" -> new ParserXML();
+            case "txt" -> new ParserTXT();
+            default -> throw new Exception("Вы выбрали иную руну!");
+        };
+
+        return parser.parse(file.getAbsolutePath());
     }
 }
 
