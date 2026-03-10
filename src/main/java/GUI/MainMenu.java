@@ -68,7 +68,8 @@ public class MainMenu extends JFrame {
 
     private Mission parseSelectedFile(File file) throws Exception {
         String fileName = file.getName();
-        String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        int dotIndex = fileName.lastIndexOf('.');
+        String extension = fileName.substring(dotIndex + 1);
 
         IParser parser = switch (extension) {
             case "json" -> new ParserJSON();
