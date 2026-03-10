@@ -3,6 +3,7 @@ package GUI;
 import Entities.Mission;
 import Parsers.IParser;
 import Parsers.ParserJSON;
+import Parsers.ParserXML;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -73,6 +74,14 @@ public class MainMenu extends JFrame {
             return parser.parse(file.getAbsolutePath());
         }
 
+        if ("xml".equalsIgnoreCase(extension)) {
+            IParser parser = new ParserXML();
+            return parser.parse(file.getAbsolutePath());
+        }
+
         throw new Exception("Вы выбрали иную руну!");
     }
 }
+
+
+
