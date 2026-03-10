@@ -3,6 +3,7 @@ package GUI;
 import Entities.Mission;
 import Parsers.IParser;
 import Parsers.ParserJSON;
+import Parsers.ParserTXT;
 import Parsers.ParserXML;
 
 import javax.swing.*;
@@ -76,6 +77,9 @@ public class MainMenu extends JFrame {
                 return parser.parse(file.getAbsolutePath());
             case "xml":
                 parser = new ParserXML();
+                return parser.parse(file.getAbsolutePath());
+            case "txt":
+                parser = new ParserTXT();
                 return parser.parse(file.getAbsolutePath());
             default:
                 throw new Exception("Вы выбрали иную руну!");
