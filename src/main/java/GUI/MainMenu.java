@@ -38,6 +38,7 @@ public class MainMenu extends JFrame {
                 if (choice == JFileChooser.APPROVE_OPTION) {
                     file = chooser.getSelectedFile();
                     Mission mission = parseSelectedFile(file);
+                    SideMenu sideMenu = new SideMenu(mission);
                 } else {
                     throw new Exception("Вы не выбрали миссию!");
                 }
