@@ -1,5 +1,9 @@
 package GUI;
 
+import Entities.Mission;
+import Parsers.IParser;
+import Parsers.ParserJSON;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -33,12 +37,7 @@ public class MainMenu extends JFrame {
 
                 if (choice == JFileChooser.APPROVE_OPTION) {
                     file = chooser.getSelectedFile();
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Вы выбрали: " + file,
-                            "Уведомление",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
+                    Mission mission = parseSelectedFile(file);
                 } else {
                     throw new Exception("Вы не выбрали миссию!");
                 }
@@ -62,5 +61,17 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
+    }
+
+    private Mission parseSelectedFile(File file) throws Exception {
+        String fileName = file.getName();
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+
+        if ("json".equalsIgnoreCase(extension)) {
+            IParser parser = new ParserJSON();
+            return parser.parse(file.getAbsolutePath());
+        }
+
+        throw new Exception("Вы выбрали иную руну!");
     }
 }
