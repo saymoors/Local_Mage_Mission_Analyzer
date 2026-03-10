@@ -6,6 +6,10 @@ public class Technique {
     private String owner;
     private int damage;
 
+    public Technique() {
+
+    }
+
     public Technique(String name, String type, String owner, int damage) {
         this.name = name;
         this.type = type;

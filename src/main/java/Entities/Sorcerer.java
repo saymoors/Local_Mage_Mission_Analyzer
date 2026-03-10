@@ -4,6 +4,10 @@ public class Sorcerer {
     private String name;
     private String rank;
 
+    public Sorcerer() {
+
+    }
+
     public Sorcerer(String name, String rank) {
         this.name = name;
         this.rank = rank;
