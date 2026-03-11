@@ -43,8 +43,8 @@ public class MainMenu extends JFrame {
                 JOptionPane.showMessageDialog(
                         this,
                         exception.getMessage(),
-                        "Ошибка",
-                        JOptionPane.ERROR_MESSAGE
+                        "Предупреждение",
+                        JOptionPane.WARNING_MESSAGE
                 );
             }
         });
@@ -66,7 +66,7 @@ public class MainMenu extends JFrame {
         int dotIndex = fileName.lastIndexOf('.');
         String extension = fileName.substring(dotIndex + 1);
 
-        IParser parser = switch (extension) {
+        IParser parser = switch (extension.toLowerCase()) {
             case "json" -> new ParserJSON();
             case "xml" -> new ParserXML();
             case "txt" -> new ParserTXT();
