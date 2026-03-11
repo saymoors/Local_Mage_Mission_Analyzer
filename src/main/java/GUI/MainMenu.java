@@ -12,19 +12,14 @@ import java.awt.*;
 import java.io.File;
 
 public class MainMenu extends JFrame {
-    JPanel panel;
-    JLabel label;
-    JButton button;
-    JFileChooser chooser;
-    FileNameExtensionFilter filter;
-    File file;
+    private File file;
 
     public MainMenu() {
-        panel = new JPanel();
-        label = new JLabel("Выберите миссию:");
-        button = new JButton("Открыть магический поисковик");
-        chooser = new JFileChooser();
-        filter = new FileNameExtensionFilter("Доступные руны: json, txt, xml", "json", "txt", "xml");
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Выберите миссию:");
+        JButton button = new JButton("Открыть магический поисковик");
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Доступные руны: json, txt, xml", "json", "txt", "xml");
 
         chooser.addChoosableFileFilter(filter);
         chooser.setFileFilter(filter);
