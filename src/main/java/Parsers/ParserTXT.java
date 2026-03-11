@@ -28,7 +28,7 @@ public class ParserTXT implements IParser {
                 }
             }
             reader.close();
-            
+
             int i = 0;
 
             mission.setMissionId(cuttingOf(data.get(i++)));
