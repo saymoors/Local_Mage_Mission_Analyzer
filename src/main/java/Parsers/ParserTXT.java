@@ -68,6 +68,7 @@ public class ParserTXT implements IParser {
             throw new Exception("Не удалось прочитать TXT-руну!");
         }
 
+        mission.linkSorcerersAndTechniques();
         return mission;
     }
 

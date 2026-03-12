@@ -16,7 +16,9 @@ public class ParserXML implements IParser {
     @Override
     public Mission parse(String file) throws Exception {
         try {
-            return xmlMapper.readValue(new File(file), Mission.class);
+            Mission mission = xmlMapper.readValue(new File(file), Mission.class);
+            mission.linkSorcerersAndTechniques();
+            return mission;
         } catch (IOException exception) {
             throw new Exception("Не удалось прочитать XML-руну!");
         }
