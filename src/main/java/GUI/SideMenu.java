@@ -42,7 +42,7 @@ public class SideMenu extends JDialog {
         panel.add(new JLabel("sorcerers:"));
         panel.add(sorcerersButton);
 
-        JButton techniquesButton = new JButton("Показать");
+        JButton techniquesButton = new JButton("показать");
         techniquesButton.addActionListener(_ -> showTechniquesDialog(mission.getTechniques()));
         panel.add(new JLabel("techniques:"));
         panel.add(techniquesButton);
