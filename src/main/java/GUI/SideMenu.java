@@ -33,7 +33,7 @@ public class SideMenu extends JDialog {
         panel.add(new JLabel(String.valueOf(mission.getDamageCost())));
 
         JButton curserButton = new JButton("показать");
-        curserButton.addActionListener(_ -> showCurserDialog(mission.getCurse()));
+        curserButton.addActionListener(_ -> showCurseDialog(mission.getCurse()));
         panel.add(new JLabel("curse:"));
         panel.add(curserButton);
 
@@ -62,11 +62,11 @@ public class SideMenu extends JDialog {
         setVisible(true);
     }
 
-    private void showCurserDialog(Curse curser) {
+    private void showCurseDialog(Curse curse) {
         Object[][] data = new Object[1][2];
         String[] columns = {"name", "threatlevel"};
-        data[0][0] = curser.getName();
-        data[0][1] = curser.getThreatLevel();
+        data[0][0] = curse.getName();
+        data[0][1] = curse.getThreatLevel();
         showTableDialog("Проклятие", data, columns);
     }
 
