@@ -17,7 +17,7 @@ public class ParserJSON implements IParser {
     public Mission parse(String file) throws Exception {
         try {
             Mission mission = objectMapper.readValue(new File(file), Mission.class);
-            mission.linkSorcerersAndTechniques();
+            mission.linkEntities();
             return mission;
         } catch (IOException exception) {
             throw new Exception("Не удалось прочитать JSON-руну!");

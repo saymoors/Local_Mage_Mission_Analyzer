@@ -88,7 +88,7 @@ public class Mission {
         this.comment = comment;
     }
 
-    public void linkSorcerersAndTechniques() throws Exception {
+    public void linkEntities() throws Exception {
         if(sorcerers == null || techniques == null) {
             throw new Exception("Данные упали в бездну. Найдите их!");
         }
