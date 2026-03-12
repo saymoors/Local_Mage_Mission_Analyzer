@@ -1,6 +1,8 @@
 package Entities;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Mission {
     private String missionId;
@@ -85,5 +87,32 @@ public class Mission {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void linkSorcerersAndTechniques() throws Exception {
+        if(sorcerers == null || techniques == null) {
+            throw new Exception("Данные имеют поля формата null. Исправьте их!");
+        }
+
+        for (Sorcerer sorcerer : this.sorcerers) {
+            sorcerer.setTechniques(new ArrayList<>());
+        }
+
+        for (Technique technique : this.techniques) {
+            boolean isFound = false;
+            String ownerName = technique.getOwner();
+
+            for (Sorcerer sorcerer : this.sorcerers) {
+                if (sorcerer.getName().equals(ownerName)) {
+                    sorcerer.addTechnique(technique);
+                    isFound = true;
+                    break;
+                }
+            }
+
+            if (!isFound) {
+                throw new Exception("Техника \"" + technique.getName() + "\" не имеет колдуна");
+            }
+        }
     }
 }
