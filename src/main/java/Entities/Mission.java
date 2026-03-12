@@ -90,7 +90,7 @@ public class Mission {
 
     public void linkSorcerersAndTechniques() throws Exception {
         if(sorcerers == null || techniques == null) {
-            throw new Exception("Данные имеют поля формата null. Исправьте их!");
+            throw new Exception("Данные упали в бездну. Найдите их!");
         }
 
         for (Sorcerer sorcerer : this.sorcerers) {
