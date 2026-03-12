@@ -4,9 +4,7 @@ public class Curse {
     private String name;
     private String threatLevel;
 
-    public Curse() {
-
-    }
+    public Curse() { }
 
     public Curse(String name, String threatLevel) {
         this.name = name;

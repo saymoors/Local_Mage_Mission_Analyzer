@@ -13,9 +13,7 @@ public class Mission {
     private List<Technique> techniques;
     private String comment;
 
-    public Mission() {
-
-    }
+    public Mission() { }
 
     public String getMissionId() {
         return missionId;
