@@ -6,7 +6,7 @@ import Entities.Technique;
 
 import java.util.List;
 
-public interface IReportMethod {
+public interface IReportActions {
     void showCurseDialog(Curse curse);
 
     void showSorcerersDialog(List<Sorcerer> sorcerers);
