@@ -2,10 +2,8 @@ package Factories;
 
 import Entities.Mission;
 
-public abstract class MissionFactory {
-    public Mission create() {
-        return createMission();
+public class MissionFactory {
+    public Mission createMission() {
+        return new Mission();
     }
-
-    protected abstract Mission createMission();
 }
