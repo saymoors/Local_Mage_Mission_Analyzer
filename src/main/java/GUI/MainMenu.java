@@ -1,10 +1,8 @@
 package GUI;
 
 import Entities.Mission;
+import Factories.ParserFactory;
 import Parsers.IParser;
-import Parsers.ParserJSON;
-import Parsers.ParserTXT;
-import Parsers.ParserXML;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -66,16 +64,9 @@ public class MainMenu extends JFrame {
         int dotIndex = fileName.lastIndexOf('.');
         String extension = fileName.substring(dotIndex + 1);
 
-        IParser parser = switch (extension.toLowerCase()) {
-            case "json" -> new ParserJSON();
-            case "xml" -> new ParserXML();
-            case "txt" -> new ParserTXT();
-            default -> throw new Exception("Вы выбрали иную руну!");
-        };
+        ParserFactory parserFactory = new ParserFactory();
+        IParser parser = parserFactory.createParser(extension);
 
         return parser.parse(file.getAbsolutePath());
     }
 }
-
-
-
