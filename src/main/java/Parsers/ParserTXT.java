@@ -4,6 +4,7 @@ import Entities.Curse;
 import Entities.Mission;
 import Entities.Sorcerer;
 import Entities.Technique;
+import Factories.MissionFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,9 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParserTXT implements IParser {
+    private final MissionFactory missionFactory;
+
+    public ParserTXT(MissionFactory missionFactory) {
+        this.missionFactory = missionFactory;
+    }
+
     @Override
     public Mission parse(String file) throws Exception {
-        Mission mission = new Mission();
+        Mission mission = missionFactory.createMission();
         List<String> data = new ArrayList<>();
 
         try {
