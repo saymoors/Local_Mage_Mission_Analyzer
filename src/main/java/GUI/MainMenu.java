@@ -1,6 +1,7 @@
 package GUI;
 
 import Entities.Mission;
+import Factories.MissionFactory;
 import Factories.ParserFactory;
 import Parsers.IParser;
 
@@ -64,7 +65,8 @@ public class MainMenu extends JFrame {
         int dotIndex = fileName.lastIndexOf('.');
         String extension = fileName.substring(dotIndex + 1);
 
-        ParserFactory parserFactory = new ParserFactory();
+        MissionFactory missionFactory = new MissionFactory();
+        ParserFactory parserFactory = new ParserFactory(missionFactory);
         IParser parser = parserFactory.createParser(extension);
 
         return parser.parse(file.getAbsolutePath());
