@@ -1,10 +1,10 @@
 package Parsers;
 
+import Builders.MissionBuilder;
 import Entities.Curse;
 import Entities.Mission;
 import Entities.Sorcerer;
 import Entities.Technique;
-import Factories.MissionFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -14,15 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParserTXT implements IParser {
-    private final MissionFactory missionFactory;
-
-    public ParserTXT(MissionFactory missionFactory) {
-        this.missionFactory = missionFactory;
-    }
-
     @Override
     public Mission parse(String file) throws Exception {
-        Mission mission = missionFactory.createMission();
+        MissionBuilder builder = new MissionBuilder();
         List<String> data = new ArrayList<>();
 
         try {
@@ -37,16 +31,16 @@ public class ParserTXT implements IParser {
 
             int i = 0;
 
-            mission.setMissionId(cuttingOf(data.get(i++)));
-            mission.setDate(cuttingOf(data.get(i++)));
-            mission.setLocation(cuttingOf(data.get(i++)));
-            mission.setOutcome(cuttingOf(data.get(i++)));
-            mission.setDamageCost(Integer.parseInt(cuttingOf(data.get(i++))));
+            builder.missionId(cuttingOf(data.get(i++)));
+            builder.date(cuttingOf(data.get(i++)));
+            builder.location(cuttingOf(data.get(i++)));
+            builder.outcome(cuttingOf(data.get(i++)));
+            builder.damageCost(Integer.parseInt(cuttingOf(data.get(i++))));
 
             Curse curse = new Curse();
             curse.setName(cuttingOf(data.get(i++)));
             curse.setThreatLevel(cuttingOf(data.get(i++)));
-            mission.setCurse(curse);
+            builder.curse(curse);
 
             List<Sorcerer> sorcerers = new ArrayList<>();
             while (i < data.size() && data.get(i).startsWith("sorcerer[")) {
@@ -55,7 +49,7 @@ public class ParserTXT implements IParser {
                 sorcerer.setRank(cuttingOf(data.get(i++)));
                 sorcerers.add(sorcerer);
             }
-            mission.setSorcerers(sorcerers);
+            builder.sorcerers(sorcerers);
 
             List<Technique> techniques = new ArrayList<>();
             while (i < data.size() && data.get(i).startsWith("technique[")) {
@@ -66,17 +60,18 @@ public class ParserTXT implements IParser {
                 technique.setDamage(Integer.parseInt(cuttingOf(data.get(i++))));
                 techniques.add(technique);
             }
-            mission.setTechniques(techniques);
+            builder.techniques(techniques);
 
             if (i < data.size() && data.get(i).startsWith("note:")) {
-                mission.setComment(cuttingOf(data.get(i)));
+                builder.comment(cuttingOf(data.get(i)));
             }
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             throw new Exception("Не удалось прочитать TXT-руну!");
         }
 
-        mission.linkEntities();
-        return mission;
+        Mission createdMission = builder.build();
+        createdMission.linkEntities();
+        return createdMission;
     }
 
     private String cuttingOf(String line) {

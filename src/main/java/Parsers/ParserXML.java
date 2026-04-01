@@ -1,7 +1,7 @@
 package Parsers;
 
+import Builders.MissionBuilder;
 import Entities.Mission;
-import Factories.MissionFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.File;
@@ -9,20 +9,18 @@ import java.io.IOException;
 
 public class ParserXML implements IParser {
     private final XmlMapper xmlMapper;
-    private final MissionFactory missionFactory;
 
-    public ParserXML(MissionFactory missionFactory) {
+    public ParserXML() {
         xmlMapper = new XmlMapper();
-        this.missionFactory = missionFactory;
     }
 
     @Override
     public Mission parse(String file) throws Exception {
         try {
-            Mission mission = missionFactory.createMission();
-            xmlMapper.readerForUpdating(mission).readValue(new File(file));
-            mission.linkEntities();
-            return mission;
+            Mission readMission = xmlMapper.readValue(new File(file), Mission.class);
+            Mission createdMission = MissionBuilder.fromMission(readMission).build();
+            createdMission.linkEntities();
+            return createdMission;
         } catch (IOException exception) {
             throw new Exception("Не удалось прочитать XML-руну!");
         }
