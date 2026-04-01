@@ -14,6 +14,16 @@ public class Mission {
     private List<Technique> techniques;
     private EconomicAssessment economicAssessment;
     private EnemyActivity enemyActivity;
+    private EnvironmentConditions environmentConditions;
+    private CivilianImpact civilianImpact;
+    private List<OperationTimelineEvent> operationTimeline;
+    private List<String> operationTags;
+    private List<String> supportUnits;
+    private List<String> recommendations;
+    private String notes;
+    private List<String> artifactsRecovered;
+    private List<String> evacuationZones;
+    private List<String> statusEffects;
     private String comment;
 
     public Mission() { }
@@ -96,6 +106,86 @@ public class Mission {
 
     public void setEnemyActivity(EnemyActivity enemyActivity) {
         this.enemyActivity = enemyActivity;
+    }
+
+    public EnvironmentConditions getEnvironmentConditions() {
+        return environmentConditions;
+    }
+
+    public void setEnvironmentConditions(EnvironmentConditions environmentConditions) {
+        this.environmentConditions = environmentConditions;
+    }
+
+    public CivilianImpact getCivilianImpact() {
+        return civilianImpact;
+    }
+
+    public void setCivilianImpact(CivilianImpact civilianImpact) {
+        this.civilianImpact = civilianImpact;
+    }
+
+    public List<OperationTimelineEvent> getOperationTimeline() {
+        return operationTimeline;
+    }
+
+    public void setOperationTimeline(List<OperationTimelineEvent> operationTimeline) {
+        this.operationTimeline = operationTimeline;
+    }
+
+    public List<String> getOperationTags() {
+        return operationTags;
+    }
+
+    public void setOperationTags(List<String> operationTags) {
+        this.operationTags = operationTags;
+    }
+
+    public List<String> getSupportUnits() {
+        return supportUnits;
+    }
+
+    public void setSupportUnits(List<String> supportUnits) {
+        this.supportUnits = supportUnits;
+    }
+
+    public List<String> getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(List<String> recommendations) {
+        this.recommendations = recommendations;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public List<String> getArtifactsRecovered() {
+        return artifactsRecovered;
+    }
+
+    public void setArtifactsRecovered(List<String> artifactsRecovered) {
+        this.artifactsRecovered = artifactsRecovered;
+    }
+
+    public List<String> getEvacuationZones() {
+        return evacuationZones;
+    }
+
+    public void setEvacuationZones(List<String> evacuationZones) {
+        this.evacuationZones = evacuationZones;
+    }
+
+    public List<String> getStatusEffects() {
+        return statusEffects;
+    }
+
+    public void setStatusEffects(List<String> statusEffects) {
+        this.statusEffects = statusEffects;
     }
 
     public String getComment() {
