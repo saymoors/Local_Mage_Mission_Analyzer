@@ -1,60 +1,60 @@
 package Entities;
 
 public class EconomicAssessment {
-    private Integer totalDamageCost;
-    private Integer infrastructureDamage;
-    private Integer transportDamage;
-    private Integer commercialDamage;
-    private Integer recoveryEstimateDays;
-    private Boolean insuranceCovered;
+    private int totalDamageCost;
+    private int infrastructureDamage;
+    private int transportDamage;
+    private int commercialDamage;
+    private int recoveryEstimateDays;
+    private boolean insuranceCovered;
 
     public EconomicAssessment() { }
 
-    public Integer getTotalDamageCost() {
+    public int getTotalDamageCost() {
         return totalDamageCost;
     }
 
-    public void setTotalDamageCost(Integer totalDamageCost) {
+    public void setTotalDamageCost(int totalDamageCost) {
         this.totalDamageCost = totalDamageCost;
     }
 
-    public Integer getInfrastructureDamage() {
+    public int getInfrastructureDamage() {
         return infrastructureDamage;
     }
 
-    public void setInfrastructureDamage(Integer infrastructureDamage) {
+    public void setInfrastructureDamage(int infrastructureDamage) {
         this.infrastructureDamage = infrastructureDamage;
     }
 
-    public Integer getTransportDamage() {
+    public int getTransportDamage() {
         return transportDamage;
     }
 
-    public void setTransportDamage(Integer transportDamage) {
+    public void setTransportDamage(int transportDamage) {
         this.transportDamage = transportDamage;
     }
 
-    public Integer getCommercialDamage() {
+    public int getCommercialDamage() {
         return commercialDamage;
     }
 
-    public void setCommercialDamage(Integer commercialDamage) {
+    public void setCommercialDamage(int commercialDamage) {
         this.commercialDamage = commercialDamage;
     }
 
-    public Integer getRecoveryEstimateDays() {
+    public int getRecoveryEstimateDays() {
         return recoveryEstimateDays;
     }
 
-    public void setRecoveryEstimateDays(Integer recoveryEstimateDays) {
+    public void setRecoveryEstimateDays(int recoveryEstimateDays) {
         this.recoveryEstimateDays = recoveryEstimateDays;
     }
 
-    public Boolean getInsuranceCovered() {
+    public boolean getInsuranceCovered() {
         return insuranceCovered;
     }
 
-    public void setInsuranceCovered(Boolean insuranceCovered) {
+    public void setInsuranceCovered(boolean insuranceCovered) {
         this.insuranceCovered = insuranceCovered;
     }
 }
