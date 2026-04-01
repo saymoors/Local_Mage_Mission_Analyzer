@@ -18,7 +18,7 @@ public class ParserFactory {
             case "json" -> new ParserJSON(missionFactory);
             case "xml" -> new ParserXML(missionFactory);
             case "txt" -> new ParserTXT(missionFactory);
-            case "yaml", "yml" -> new ParserYAML(missionFactory);
+            case "yaml" -> new ParserYAML(missionFactory);
             default -> throw new Exception("Вы выбрали иную руну!");
         };
     }
