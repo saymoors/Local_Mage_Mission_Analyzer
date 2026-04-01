@@ -12,6 +12,8 @@ public class Mission {
     private Curse curse;
     private List<Sorcerer> sorcerers;
     private List<Technique> techniques;
+    private EconomicAssessment economicAssessment;
+    private EnemyActivity enemyActivity;
     private String comment;
 
     public Mission() { }
@@ -78,6 +80,22 @@ public class Mission {
 
     public void setTechniques(List<Technique> techniques) {
         this.techniques = techniques;
+    }
+
+    public EconomicAssessment getEconomicAssessment() {
+        return economicAssessment;
+    }
+
+    public void setEconomicAssessment(EconomicAssessment economicAssessment) {
+        this.economicAssessment = economicAssessment;
+    }
+
+    public EnemyActivity getEnemyActivity() {
+        return enemyActivity;
+    }
+
+    public void setEnemyActivity(EnemyActivity enemyActivity) {
+        this.enemyActivity = enemyActivity;
     }
 
     public String getComment() {
