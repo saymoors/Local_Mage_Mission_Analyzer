@@ -1,9 +1,9 @@
 package GUI;
 
 import Entities.Mission;
-import Factories.*;
+import Factories.ParserFactory;
+import Factories.ReportFormatFactory;
 import Parsers.IParser;
-import Reports.*;
 import Reports.IReportFormat;
 
 import javax.swing.*;
@@ -12,9 +12,13 @@ import java.awt.*;
 import java.io.File;
 
 public class MainMenu extends JFrame {
-    private File file;
+    private final ParserFactory parserFactory;
+    private final ReportFormatFactory reportFormatFactory;
 
     public MainMenu() {
+        parserFactory = new ParserFactory();
+        reportFormatFactory = new ReportFormatFactory();
+
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
         JButton button = new JButton("Открыть магический поисковик");
@@ -38,8 +42,8 @@ public class MainMenu extends JFrame {
 
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Доступные руны: json, txt, xml, yaml",
-                "json", "txt", "xml", "yaml"
+                "Доступные руны: json, txt, xml",
+                "json", "txt", "xml"
         );
 
         chooser.addChoosableFileFilter(filter);
@@ -54,7 +58,7 @@ public class MainMenu extends JFrame {
                 int choice = chooser.showOpenDialog(this);
 
                 if (choice == JFileChooser.APPROVE_OPTION) {
-                    file = chooser.getSelectedFile();
+                    File file = chooser.getSelectedFile();
                     Mission mission = parseSelectedFile(file);
                     IReportFormat format = returnSelectedFormat(buttonGroup);
                     new SideMenu(mission, format);
@@ -88,24 +92,24 @@ public class MainMenu extends JFrame {
     }
 
     private Mission parseSelectedFile(File file) throws Exception {
-        String fileName = file.getName();
-        int dotIndex = fileName.lastIndexOf('.');
-        String extension = fileName.substring(dotIndex + 1);
-
-        MissionFactory missionFactory = new MissionFactory();
-        ParserFactory parserFactory = new ParserFactory(missionFactory);
+        String extension = extractExtension(file);
         IParser parser = parserFactory.createParser(extension);
-
         return parser.parse(file.getAbsolutePath());
     }
 
     private IReportFormat returnSelectedFormat(ButtonGroup buttonGroup) throws Exception {
-        return switch (buttonGroup.getSelection().getActionCommand()) {
-            case "summary" -> new SummaryReportFormat();
-            case "detailed" -> new DetailedReportFormat();
-            case "risk" -> new RiskReportFormat();
-            case "statistics" -> new StatisticsReportFormat();
-            default -> throw new Exception("Вы не выбрали тип отчета!");
-        };
+        ButtonModel selection = buttonGroup.getSelection();
+        if (selection == null) {
+            throw new Exception("Вы не выбрали тип отчета!");
+        }
+
+        return reportFormatFactory.createReportFormat(selection.getActionCommand());
+    }
+
+    private String extractExtension(File file) {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf('.');
+
+        return fileName.substring(dotIndex + 1);
     }
 }
