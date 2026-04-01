@@ -28,7 +28,7 @@ public class MainMenu extends JFrame {
         firstRadioButton.setActionCommand("summary");
         secondRadioButton.setActionCommand("detailed");
         thirdRadioButton.setActionCommand("risk");
-        fourthRadioButton.setActionCommand("stats");
+        fourthRadioButton.setActionCommand("statistics");
         secondRadioButton.setSelected(true);
 
         buttonGroup.add(firstRadioButton);
@@ -37,7 +37,10 @@ public class MainMenu extends JFrame {
         buttonGroup.add(fourthRadioButton);
 
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Доступные руны: json, txt, xml", "json", "txt", "xml");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Доступные руны: json, txt, xml, yaml",
+                "json", "txt", "xml", "yaml"
+        );
 
         chooser.addChoosableFileFilter(filter);
         chooser.setFileFilter(filter);
@@ -101,7 +104,7 @@ public class MainMenu extends JFrame {
             case "summary" -> new SummaryReportFormat();
             case "detailed" -> new DetailedReportFormat();
             case "risk" -> new RiskReportFormat();
-            case "stats" -> new StatisticsReportFormat();
+            case "statistics" -> new StatisticsReportFormat();
             default -> throw new Exception("Вы не выбрали тип отчета!");
         };
     }
