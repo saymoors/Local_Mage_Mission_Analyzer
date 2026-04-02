@@ -12,7 +12,7 @@ public class ParserFactory {
         return switch (extension.toLowerCase()) {
             case "json" -> new ParserJSON();
             case "xml" -> new ParserXML();
-            case "yaml" -> new ParserYAML();
+            case "yaml", "yml" -> new ParserYAML();
             case "txt" -> new ParserTXT();
             case "" -> new ParserFWE();
             default -> throw new Exception("Вы выбрали иную руну!");
