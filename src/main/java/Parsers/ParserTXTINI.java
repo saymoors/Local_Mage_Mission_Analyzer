@@ -1,11 +1,7 @@
 package Parsers;
 
 import Builders.MissionBuilder;
-import Entities.Curse;
-import Entities.EnvironmentConditions;
 import Entities.Mission;
-import Entities.Sorcerer;
-import Entities.Technique;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -66,110 +62,114 @@ public class ParserTXTINI implements IParser {
 
             if (i < data.size() && data.get(i).equals("[CURSE]")) {
                 i++;
-                Curse curse = new Curse();
+                String curseName = null;
+                String threatLevel = null;
 
                 while (i < data.size() && !data.get(i).startsWith("[")) {
                     if (data.get(i).startsWith("name=")) {
-                        curse.setName(cuttingOf(data.get(i++)));
+                        curseName = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("threatLevel=")) {
-                        curse.setThreatLevel(cuttingOf(data.get(i++)));
+                        threatLevel = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     i++;
                 }
 
-                builder.curse(curse);
+                builder.curse(curseName, threatLevel);
             }
 
-            List<Sorcerer> sorcerers = new ArrayList<>();
             while (i < data.size() && data.get(i).equals("[SORCERER]")) {
                 i++;
-                Sorcerer sorcerer = new Sorcerer();
+                String name = null;
+                String rank = null;
 
                 while (i < data.size() && !data.get(i).startsWith("[")) {
                     if (data.get(i).startsWith("name=")) {
-                        sorcerer.setName(cuttingOf(data.get(i++)));
+                        name = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("rank=")) {
-                        sorcerer.setRank(cuttingOf(data.get(i++)));
+                        rank = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     i++;
                 }
 
-                sorcerers.add(sorcerer);
+                builder.addSorcerer(name, rank);
             }
-            builder.sorcerers(sorcerers);
 
-            List<Technique> techniques = new ArrayList<>();
             while (i < data.size() && data.get(i).equals("[TECHNIQUE]")) {
                 i++;
-                Technique technique = new Technique();
+                String name = null;
+                String type = null;
+                String owner = null;
+                int damage = 0;
 
                 while (i < data.size() && !data.get(i).startsWith("[")) {
                     if (data.get(i).startsWith("name=")) {
-                        technique.setName(cuttingOf(data.get(i++)));
+                        name = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("type=")) {
-                        technique.setType(cuttingOf(data.get(i++)));
+                        type = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("owner=")) {
-                        technique.setOwner(cuttingOf(data.get(i++)));
+                        owner = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("damage=")) {
-                        technique.setDamage(Integer.parseInt(cuttingOf(data.get(i++))));
+                        damage = Integer.parseInt(cuttingOf(data.get(i++)));
                         continue;
                     }
 
                     i++;
                 }
 
-                techniques.add(technique);
+                builder.addTechnique(name, type, owner, damage);
             }
-            builder.techniques(techniques);
 
             if (i < data.size() && data.get(i).equals("[ENVIRONMENT]")) {
                 i++;
-                EnvironmentConditions environment = new EnvironmentConditions();
+                String weather = null;
+                String timeOfDay = null;
+                String visibility = null;
+                int cursedEnergyDensity = 0;
 
                 while (i < data.size() && !data.get(i).startsWith("[")) {
                     if (data.get(i).startsWith("weather=")) {
-                        environment.setWeather(cuttingOf(data.get(i++)));
+                        weather = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("timeOfDay=")) {
-                        environment.setTimeOfDay(cuttingOf(data.get(i++)));
+                        timeOfDay = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("visibility=")) {
-                        environment.setVisibility(cuttingOf(data.get(i++)));
+                        visibility = cuttingOf(data.get(i++));
                         continue;
                     }
 
                     if (data.get(i).startsWith("cursedEnergyDensity=")) {
-                        environment.setCursedEnergyDensity(Integer.parseInt(cuttingOf(data.get(i++))));
+                        cursedEnergyDensity = Integer.parseInt(cuttingOf(data.get(i++)));
                         continue;
                     }
 
                     i++;
                 }
 
-                builder.environmentConditions(environment);
+                builder.environmentConditions(weather, timeOfDay, visibility, cursedEnergyDensity);
             }
         } catch (Exception exception) {
             throw new Exception("Не удалось прочитать TXTINI-руну!");

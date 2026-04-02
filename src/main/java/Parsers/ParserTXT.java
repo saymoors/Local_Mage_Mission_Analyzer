@@ -1,10 +1,7 @@
 package Parsers;
 
 import Builders.MissionBuilder;
-import Entities.Curse;
 import Entities.Mission;
-import Entities.Sorcerer;
-import Entities.Technique;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -41,30 +38,20 @@ public class ParserTXT implements IParser {
             builder.outcome(cuttingOf(data.get(i++)));
             builder.damageCost(Integer.parseInt(cuttingOf(data.get(i++))));
 
-            Curse curse = new Curse();
-            curse.setName(cuttingOf(data.get(i++)));
-            curse.setThreatLevel(cuttingOf(data.get(i++)));
-            builder.curse(curse);
+            builder.curse(cuttingOf(data.get(i++)), cuttingOf(data.get(i++)));
 
-            List<Sorcerer> sorcerers = new ArrayList<>();
             while (i < data.size() && data.get(i).startsWith("sorcerer[")) {
-                Sorcerer sorcerer = new Sorcerer();
-                sorcerer.setName(cuttingOf(data.get(i++)));
-                sorcerer.setRank(cuttingOf(data.get(i++)));
-                sorcerers.add(sorcerer);
+                builder.addSorcerer(cuttingOf(data.get(i++)), cuttingOf(data.get(i++)));
             }
-            builder.sorcerers(sorcerers);
 
-            List<Technique> techniques = new ArrayList<>();
             while (i < data.size() && data.get(i).startsWith("technique[")) {
-                Technique technique = new Technique();
-                technique.setName(cuttingOf(data.get(i++)));
-                technique.setType(cuttingOf(data.get(i++)));
-                technique.setOwner(cuttingOf(data.get(i++)));
-                technique.setDamage(Integer.parseInt(cuttingOf(data.get(i++))));
-                techniques.add(technique);
+                builder.addTechnique(
+                        cuttingOf(data.get(i++)),
+                        cuttingOf(data.get(i++)),
+                        cuttingOf(data.get(i++)),
+                        Integer.parseInt(cuttingOf(data.get(i++)))
+                );
             }
-            builder.techniques(techniques);
 
             if (i < data.size() && data.get(i).startsWith("note:")) {
                 builder.comment(cuttingOf(data.get(i)));

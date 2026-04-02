@@ -75,16 +75,25 @@ public class MissionBuilder {
         return this;
     }
 
+    public MissionBuilder curse(String name, String threatLevel) {
+        return curse(new Curse(name, threatLevel));
+    }
+
     public MissionBuilder sorcerers(List<Sorcerer> sorcerers) {
         mission.setSorcerers(sorcerers);
         return this;
     }
 
-    public void addSorcerer(Sorcerer sorcerer) {
+    public MissionBuilder addSorcerer(Sorcerer sorcerer) {
         if (mission.getSorcerers() == null) {
             mission.setSorcerers(new ArrayList<>());
         }
         mission.getSorcerers().add(sorcerer);
+        return this;
+    }
+
+    public MissionBuilder addSorcerer(String name, String rank) {
+        return addSorcerer(new Sorcerer(name, rank));
     }
 
     public MissionBuilder techniques(List<Technique> techniques) {
@@ -92,11 +101,16 @@ public class MissionBuilder {
         return this;
     }
 
-    public void addTechnique(Technique technique) {
+    public MissionBuilder addTechnique(Technique technique) {
         if (mission.getTechniques() == null) {
             mission.setTechniques(new ArrayList<>());
         }
         mission.getTechniques().add(technique);
+        return this;
+    }
+
+    public MissionBuilder addTechnique(String name, String type, String owner, int damage) {
+        return addTechnique(new Technique(name, type, owner, damage));
     }
 
     public MissionBuilder economicAssessment(EconomicAssessment economicAssessment) {
@@ -104,9 +118,45 @@ public class MissionBuilder {
         return this;
     }
 
+    public MissionBuilder economicAssessment(
+            int totalDamageCost,
+            int infrastructureDamage,
+            int transportDamage,
+            int commercialDamage,
+            int recoveryEstimateDays,
+            boolean insuranceCovered
+    ) {
+        EconomicAssessment economicAssessment = new EconomicAssessment();
+        economicAssessment.setTotalDamageCost(totalDamageCost);
+        economicAssessment.setInfrastructureDamage(infrastructureDamage);
+        economicAssessment.setTransportDamage(transportDamage);
+        economicAssessment.setCommercialDamage(commercialDamage);
+        economicAssessment.setRecoveryEstimateDays(recoveryEstimateDays);
+        economicAssessment.setInsuranceCovered(insuranceCovered);
+        return economicAssessment(economicAssessment);
+    }
+
     public MissionBuilder enemyActivity(EnemyActivity enemyActivity) {
         mission.setEnemyActivity(enemyActivity);
         return this;
+    }
+
+    public MissionBuilder enemyActivity(
+            String behaviorType,
+            String targetPriority,
+            String mobility,
+            String escalationRisk,
+            List<String> attackPatterns,
+            List<String> countermeasuresUsed
+    ) {
+        EnemyActivity enemyActivity = new EnemyActivity();
+        enemyActivity.setBehaviorType(behaviorType);
+        enemyActivity.setTargetPriority(targetPriority);
+        enemyActivity.setMobility(mobility);
+        enemyActivity.setEscalationRisk(escalationRisk);
+        enemyActivity.setAttackPatterns(attackPatterns);
+        enemyActivity.setCountermeasuresUsed(countermeasuresUsed);
+        return enemyActivity(enemyActivity);
     }
 
     public MissionBuilder environmentConditions(EnvironmentConditions environmentConditions) {
@@ -114,9 +164,32 @@ public class MissionBuilder {
         return this;
     }
 
+    public MissionBuilder environmentConditions(
+            String weather,
+            String timeOfDay,
+            String visibility,
+            int cursedEnergyDensity
+    ) {
+        EnvironmentConditions environmentConditions = new EnvironmentConditions();
+        environmentConditions.setWeather(weather);
+        environmentConditions.setTimeOfDay(timeOfDay);
+        environmentConditions.setVisibility(visibility);
+        environmentConditions.setCursedEnergyDensity(cursedEnergyDensity);
+        return environmentConditions(environmentConditions);
+    }
+
     public MissionBuilder civilianImpact(CivilianImpact civilianImpact) {
         mission.setCivilianImpact(civilianImpact);
         return this;
+    }
+
+    public MissionBuilder civilianImpact(int evacuated, int injured, int missing, String publicExposureRisk) {
+        CivilianImpact civilianImpact = new CivilianImpact();
+        civilianImpact.setEvacuated(evacuated);
+        civilianImpact.setInjured(injured);
+        civilianImpact.setMissing(missing);
+        civilianImpact.setPublicExposureRisk(publicExposureRisk);
+        return civilianImpact(civilianImpact);
     }
 
     public MissionBuilder operationTimeline(List<OperationTimelineEvent> operationTimeline) {
@@ -124,11 +197,20 @@ public class MissionBuilder {
         return this;
     }
 
-    public void addOperationTimelineEvent(OperationTimelineEvent event) {
+    public MissionBuilder addOperationTimelineEvent(OperationTimelineEvent event) {
         if (mission.getOperationTimeline() == null) {
             mission.setOperationTimeline(new ArrayList<>());
         }
         mission.getOperationTimeline().add(event);
+        return this;
+    }
+
+    public MissionBuilder addOperationTimelineEvent(String timestamp, String type, String description) {
+        OperationTimelineEvent event = new OperationTimelineEvent();
+        event.setTimestamp(timestamp);
+        event.setType(type);
+        event.setDescription(description);
+        return addOperationTimelineEvent(event);
     }
 
     public MissionBuilder operationTags(List<String> operationTags) {
@@ -249,6 +331,7 @@ public class MissionBuilder {
         if (mission.getStatusEffects() == null) {
             mission.setStatusEffects(new ArrayList<>());
         }
+
         mission.linkEntities();
         return mission;
     }
