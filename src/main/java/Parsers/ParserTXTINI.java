@@ -24,9 +24,8 @@ public class ParserTXTINI implements IParser {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
-                String trimmedLine = line.replace("\uFEFF", "").trim();
-                if (!trimmedLine.isEmpty() && !trimmedLine.startsWith(";") && !trimmedLine.startsWith("#")) {
-                    data.add(trimmedLine);
+                if (!line.isEmpty()) {
+                    data.add(line);
                 }
             }
             reader.close();
