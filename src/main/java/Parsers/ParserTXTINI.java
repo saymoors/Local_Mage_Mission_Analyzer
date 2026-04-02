@@ -24,7 +24,7 @@ public class ParserTXTINI implements IParser {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
-                String trimmedLine = line.trim();
+                String trimmedLine = line.replace("\uFEFF", "").trim();
                 if (!trimmedLine.isEmpty() && !trimmedLine.startsWith(";") && !trimmedLine.startsWith("#")) {
                     data.add(trimmedLine);
                 }
@@ -33,147 +33,144 @@ public class ParserTXTINI implements IParser {
 
             int i = 0;
 
-            while (i < data.size()) {
-                switch (data.get(i)) {
-                    case "[MISSION]" -> {
-                        i++;
-
-                        while (i < data.size() && !data.get(i).startsWith("[")) {
-                            if (data.get(i).startsWith("missionId=")) {
-                                builder.missionId(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("date=")) {
-                                builder.date(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("location=")) {
-                                builder.location(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("outcome=")) {
-                                builder.outcome(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("damageCost=")) {
-                                builder.damageCost(Integer.parseInt(cuttingOf(data.get(i++))));
-                                continue;
-                            }
-
-                            i++;
-                        }
-
+            if (data.get(i).equals("[MISSION]")) {
+                i++;
+                while (i < data.size() && !data.get(i).startsWith("[")) {
+                    if (data.get(i).startsWith("missionId=")) {
+                        builder.missionId(cuttingOf(data.get(i++)));
                         continue;
                     }
-                    case "[CURSE]" -> {
-                        i++;
-                        Curse curse = new Curse();
 
-                        while (i < data.size() && !data.get(i).startsWith("[")) {
-                            if (data.get(i).startsWith("name=")) {
-                                curse.setName(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("threatLevel=")) {
-                                curse.setThreatLevel(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            i++;
-                        }
-
-                        builder.curse(curse);
+                    if (data.get(i).startsWith("date=")) {
+                        builder.date(cuttingOf(data.get(i++)));
                         continue;
                     }
-                    case "[SORCERER]" -> {
-                        i++;
-                        Sorcerer sorcerer = new Sorcerer();
 
-                        while (i < data.size() && !data.get(i).startsWith("[")) {
-                            if (data.get(i).startsWith("name=")) {
-                                sorcerer.setName(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("rank=")) {
-                                sorcerer.setRank(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            i++;
-                        }
-
-                        builder.addSorcerer(sorcerer);
+                    if (data.get(i).startsWith("location=")) {
+                        builder.location(cuttingOf(data.get(i++)));
                         continue;
                     }
-                    case "[TECHNIQUE]" -> {
-                        i++;
-                        Technique technique = new Technique();
 
-                        while (i < data.size() && !data.get(i).startsWith("[")) {
-                            if (data.get(i).startsWith("name=")) {
-                                technique.setName(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("type=")) {
-                                technique.setType(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("owner=")) {
-                                technique.setOwner(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("damage=")) {
-                                technique.setDamage(Integer.parseInt(cuttingOf(data.get(i++))));
-                                continue;
-                            }
-
-                            i++;
-                        }
-
-                        builder.addTechnique(technique);
+                    if (data.get(i).startsWith("outcome=")) {
+                        builder.outcome(cuttingOf(data.get(i++)));
                         continue;
                     }
-                    case "[ENVIRONMENT]" -> {
-                        i++;
-                        EnvironmentConditions environment = new EnvironmentConditions();
 
-                        while (i < data.size() && !data.get(i).startsWith("[")) {
-                            if (data.get(i).startsWith("weather=")) {
-                                environment.setWeather(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("timeOfDay=")) {
-                                environment.setTimeOfDay(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("visibility=")) {
-                                environment.setVisibility(cuttingOf(data.get(i++)));
-                                continue;
-                            }
-
-                            if (data.get(i).startsWith("cursedEnergyDensity=")) {
-                                environment.setCursedEnergyDensity(Integer.parseInt(cuttingOf(data.get(i++))));
-                                continue;
-                            }
-
-                            i++;
-                        }
-
-                        builder.environmentConditions(environment);
+                    if (data.get(i).startsWith("damageCost=")) {
+                        builder.damageCost(Integer.parseInt(cuttingOf(data.get(i++))));
                         continue;
                     }
+
+                    i++;
                 }
+            }
+
+            if (i < data.size() && data.get(i).equals("[CURSE]")) {
+                i++;
+                Curse curse = new Curse();
+
+                while (i < data.size() && !data.get(i).startsWith("[")) {
+                    if (data.get(i).startsWith("name=")) {
+                        curse.setName(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("threatLevel=")) {
+                        curse.setThreatLevel(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                builder.curse(curse);
+            }
+
+            List<Sorcerer> sorcerers = new ArrayList<>();
+            while (i < data.size() && data.get(i).equals("[SORCERER]")) {
+                i++;
+                Sorcerer sorcerer = new Sorcerer();
+
+                while (i < data.size() && !data.get(i).startsWith("[")) {
+                    if (data.get(i).startsWith("name=")) {
+                        sorcerer.setName(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("rank=")) {
+                        sorcerer.setRank(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                sorcerers.add(sorcerer);
+            }
+            builder.sorcerers(sorcerers);
+
+            List<Technique> techniques = new ArrayList<>();
+            while (i < data.size() && data.get(i).equals("[TECHNIQUE]")) {
+                i++;
+                Technique technique = new Technique();
+
+                while (i < data.size() && !data.get(i).startsWith("[")) {
+                    if (data.get(i).startsWith("name=")) {
+                        technique.setName(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("type=")) {
+                        technique.setType(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("owner=")) {
+                        technique.setOwner(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("damage=")) {
+                        technique.setDamage(Integer.parseInt(cuttingOf(data.get(i++))));
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                techniques.add(technique);
+            }
+            builder.techniques(techniques);
+
+            if (i < data.size() && data.get(i).equals("[ENVIRONMENT]")) {
+                i++;
+                EnvironmentConditions environment = new EnvironmentConditions();
+
+                while (i < data.size() && !data.get(i).startsWith("[")) {
+                    if (data.get(i).startsWith("weather=")) {
+                        environment.setWeather(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("timeOfDay=")) {
+                        environment.setTimeOfDay(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("visibility=")) {
+                        environment.setVisibility(cuttingOf(data.get(i++)));
+                        continue;
+                    }
+
+                    if (data.get(i).startsWith("cursedEnergyDensity=")) {
+                        environment.setCursedEnergyDensity(Integer.parseInt(cuttingOf(data.get(i++))));
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                builder.environmentConditions(environment);
             }
         } catch (Exception exception) {
             throw new Exception("Не удалось прочитать TXTINI-руну!");
