@@ -7,7 +7,7 @@ import Parsers.IParser;
 import Reports.IReportFormat;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 
@@ -40,14 +40,7 @@ public class MainMenu extends JFrame {
         buttonGroup.add(thirdRadioButton);
         buttonGroup.add(fourthRadioButton);
 
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Доступные руны: json, txt, xml",
-                "json", "txt", "xml"
-        );
-
-        chooser.addChoosableFileFilter(filter);
-        chooser.setFileFilter(filter);
+        JFileChooser chooser = getJFileChooser();
 
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panel.setPreferredSize(new Dimension(260, 225));
@@ -91,25 +84,46 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
+    private JFileChooser getJFileChooser() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                }
+
+                String fileName = file.getName().toLowerCase();
+                return fileName.endsWith(".json")
+                        || fileName.endsWith(".txt")
+                        || fileName.endsWith(".xml")
+                        || fileName.endsWith(".yaml")
+                        || !fileName.contains(".");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Доступные руны: json, xml, yaml, txt, без расширения";
+            }
+        });
+        return chooser;
+    }
+
     private Mission parseSelectedFile(File file) throws Exception {
-        String extension = extractExtension(file);
+        String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
         return parser.parse(file.getAbsolutePath());
     }
 
     private IReportFormat returnSelectedFormat(ButtonGroup buttonGroup) throws Exception {
         ButtonModel selection = buttonGroup.getSelection();
-        if (selection == null) {
-            throw new Exception("Вы не выбрали тип отчета!");
-        }
-
         return reportFormatFactory.createReportFormat(selection.getActionCommand());
     }
 
-    private String extractExtension(File file) {
+    private String getExtension(File file) {
         String fileName = file.getName();
         int dotIndex = fileName.lastIndexOf('.');
-
-        return fileName.substring(dotIndex + 1);
+        return dotIndex < 0 ? "" : fileName.substring(dotIndex + 1);
     }
 }
