@@ -99,12 +99,13 @@ public class MainMenu extends JFrame {
                         || fileName.endsWith(".txt")
                         || fileName.endsWith(".xml")
                         || fileName.endsWith(".yaml")
+                        || fileName.endsWith(".yml")
                         || !fileName.contains(".");
             }
 
             @Override
             public String getDescription() {
-                return "Доступные руны: json, xml, yaml, txt, без расширения";
+                return "Доступные руны: json, xml, yaml, yml, txt, без расширения";
             }
         });
         return chooser;
