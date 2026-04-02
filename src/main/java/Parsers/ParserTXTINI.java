@@ -176,9 +176,7 @@ public class ParserTXTINI implements IParser {
             throw new Exception("Не удалось прочитать TXTINI-руну!");
         }
 
-        Mission createdMission = builder.build();
-        createdMission.linkEntities();
-        return createdMission;
+        return builder.build();
     }
 
     private String cuttingOf(String line) {

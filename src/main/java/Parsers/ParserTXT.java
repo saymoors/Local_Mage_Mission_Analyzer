@@ -73,9 +73,7 @@ public class ParserTXT implements IParser {
             throw new Exception("Не удалось прочитать TXT-руну!");
         }
 
-        Mission createdMission = builder.build();
-        createdMission.linkEntities();
-        return createdMission;
+        return builder.build();
     }
 
     private String cuttingOf(String line) {

@@ -18,9 +18,7 @@ public class ParserYAML implements IParser {
     public Mission parse(String file) throws Exception {
         try {
             Mission readMission = yamlMapper.readValue(new File(file), Mission.class);
-            Mission createdMission = MissionBuilder.fromMission(readMission).build();
-            createdMission.linkEntities();
-            return createdMission;
+            return MissionBuilder.fromMission(readMission).build();
         } catch (IOException exception) {
             throw new Exception("Не удалось прочитать YAML-руну!");
         }

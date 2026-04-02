@@ -125,9 +125,7 @@ public class ParserFWE implements IParser {
             throw new Exception("Не удалось прочитать FWE-руну!");
         }
 
-        Mission createdMission = builder.build();
-        createdMission.linkEntities();
-        return createdMission;
+        return builder.build();
     }
 
     private String[] splitLine(String line) {

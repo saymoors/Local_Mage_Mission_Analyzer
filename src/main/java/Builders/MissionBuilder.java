@@ -213,7 +213,7 @@ public class MissionBuilder {
         return this;
     }
 
-    public Mission build() {
+    public Mission build() throws Exception {
         if (mission.getSorcerers() == null) {
             mission.setSorcerers(new ArrayList<>());
         }
@@ -249,7 +249,7 @@ public class MissionBuilder {
         if (mission.getStatusEffects() == null) {
             mission.setStatusEffects(new ArrayList<>());
         }
-
+        mission.linkEntities();
         return mission;
     }
 }
