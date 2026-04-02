@@ -92,7 +92,7 @@ public class MainMenu extends JFrame {
     }
 
     private JFileChooser getJFileChooser() {
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser("C://Users//HONOR//Documents//Теория и технология программирования//Лабораторная работа 2//Тестовые файлы");
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileFilter() {
             final ArrayList<String> extensions = new ArrayList<>(parserFactory.getParsers().keySet());
@@ -110,11 +110,12 @@ public class MainMenu extends JFrame {
             @Override
             public String getDescription() {
                 StringBuilder description = new StringBuilder();
+                description.append("Доступные руны:");
                 for(String extension : extensions) {
                     if(extension.isEmpty()) {
                         description.append(" без расширения");
                     } else {
-                        description.append(" ").append(extension);
+                        description.append(", ").append(extension);
                     }
                 }
                 return description.toString();
