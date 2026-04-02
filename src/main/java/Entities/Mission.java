@@ -197,19 +197,23 @@ public class Mission {
     }
 
     public void linkEntities() throws Exception {
-        if(sorcerers == null || techniques == null) {
-            throw new Exception("Данные упали в бездну. Найдите их!");
+        if (sorcerers == null) {
+            sorcerers = new ArrayList<>();
         }
 
-        for (Sorcerer sorcerer : this.sorcerers) {
+        if (techniques == null) {
+            techniques = new ArrayList<>();
+        }
+
+        for (Sorcerer sorcerer : sorcerers) {
             sorcerer.setTechniques(new ArrayList<>());
         }
 
-        for (Technique technique : this.techniques) {
+        for (Technique technique : techniques) {
             boolean isFound = false;
             String ownerName = technique.getOwner();
 
-            for (Sorcerer sorcerer : this.sorcerers) {
+            for (Sorcerer sorcerer : sorcerers) {
                 if (sorcerer.getName().equals(ownerName)) {
                     sorcerer.addTechnique(technique);
                     isFound = true;
