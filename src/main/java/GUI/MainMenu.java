@@ -7,7 +7,6 @@ import Parsers.IParser;
 import Reports.IReportFormat;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 
@@ -40,7 +39,7 @@ public class MainMenu extends JFrame {
         buttonGroup.add(thirdRadioButton);
         buttonGroup.add(fourthRadioButton);
 
-        JFileChooser chooser = getJFileChooser();
+        JFileChooser chooser = new JFileChooser();
 
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panel.setPreferredSize(new Dimension(260, 225));
@@ -82,33 +81,6 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
-    }
-
-    private JFileChooser getJFileChooser() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory()) {
-                    return true;
-                }
-
-                String fileName = file.getName().toLowerCase();
-                return fileName.endsWith(".json")
-                        || fileName.endsWith(".txt")
-                        || fileName.endsWith(".xml")
-                        || fileName.endsWith(".yaml")
-                        || fileName.endsWith(".yml")
-                        || !fileName.contains(".");
-            }
-
-            @Override
-            public String getDescription() {
-                return "Доступные руны: json, xml, yaml, yml, txt, txt(ini), без расширения";
-            }
-        });
-        return chooser;
     }
 
     private Mission parseSelectedFile(File file) throws Exception {
