@@ -27,9 +27,13 @@ public class MainMenu extends JFrame {
         ButtonGroup buttonGroup = new ButtonGroup();
         JFileChooser chooser = getJFileChooser();
 
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        panel.setPreferredSize(new Dimension(260, 225));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         button.setPreferredSize(new Dimension(240, 40));
+        button.setMaximumSize(new Dimension(240, 40));
+
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         button.addActionListener(_ -> {
             try {
@@ -54,17 +58,20 @@ public class MainMenu extends JFrame {
         });
 
         panel.add(label);
+        panel.add(Box.createVerticalStrut(10));
         panel.add(button);
 
         for (String reportFormat : reportFormatFactory.getReportFormats().keySet()) {
             JRadioButton radioButton = new JRadioButton(reportFormat);
             radioButton.setActionCommand(reportFormat);
+            radioButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             if (reportFormat.equals(reportFormatFactory.getDefaultReportType())) {
                 radioButton.setSelected(true);
             }
 
             buttonGroup.add(radioButton);
+            panel.add(Box.createVerticalStrut(10));
             panel.add(radioButton);
         }
 
