@@ -26,6 +26,10 @@ public class ParserFactory {
         parsers.put(extension.toLowerCase(), parser);
     }
 
+    public Map<String, IParser> getParsers() {
+        return parsers;
+    }
+
     public IParser createParser(String extension) throws Exception {
         IParser parser = parsers.get(extension.toLowerCase());
 
