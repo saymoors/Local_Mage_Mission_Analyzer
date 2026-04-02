@@ -22,10 +22,10 @@ public class DetailedReportFormat implements IReportFormat {
         panel.add(new JLabel("damageCost:"));
         panel.add(new JLabel(String.valueOf(mission.getDamageCost())));
 
-        JButton curserButton = new JButton("Показать");
-        curserButton.addActionListener(_ -> actions.showCurseDialog(mission.getCurse()));
+        JButton curseButton = new JButton("Показать");
+        curseButton.addActionListener(_ -> actions.showCurseDialog(mission.getCurse()));
         panel.add(new JLabel("curse:"));
-        panel.add(curserButton);
+        panel.add(curseButton);
 
         JButton sorcerersButton = new JButton("Показать");
         sorcerersButton.addActionListener(_ -> actions.showSorcerersDialog(mission.getSorcerers()));
