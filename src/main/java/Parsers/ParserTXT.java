@@ -29,6 +29,10 @@ public class ParserTXT implements IParser {
             }
             reader.close();
 
+            if (!data.isEmpty() && data.getFirst().startsWith("[")) {
+                return new ParserTXTINI().parse(file);
+            }
+
             int i = 0;
 
             builder.missionId(cuttingOf(data.get(i++)));
