@@ -1,6 +1,5 @@
 package Reports;
 
-import Entities.Curse;
 import Entities.Mission;
 
 import javax.swing.*;
