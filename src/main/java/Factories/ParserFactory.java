@@ -7,15 +7,32 @@ import Parsers.ParserTXT;
 import Parsers.ParserXML;
 import Parsers.ParserYAML;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ParserFactory {
+    private final Map<String, IParser> parsers = new HashMap<>();
+
+    public ParserFactory() {
+        register("json", new ParserJSON());
+        register("xml", new ParserXML());
+        register("yaml", new ParserYAML());
+        register("yml", new ParserYAML());
+        register("txt", new ParserTXT());
+        register("", new ParserFWE());
+    }
+
+    public void register(String extension, IParser parser) {
+        parsers.put(extension.toLowerCase(), parser);
+    }
+
     public IParser createParser(String extension) throws Exception {
-        return switch (extension.toLowerCase()) {
-            case "json" -> new ParserJSON();
-            case "xml" -> new ParserXML();
-            case "yaml", "yml" -> new ParserYAML();
-            case "txt" -> new ParserTXT();
-            case "" -> new ParserFWE();
-            default -> throw new Exception("Вы выбрали иную руну!");
-        };
+        IParser parser = parsers.get(extension.toLowerCase());
+
+        if (parser == null) {
+            throw new Exception("Вы выбрали иную руну!");
+        }
+
+        return parser;
     }
 }
