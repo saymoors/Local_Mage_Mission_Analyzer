@@ -16,14 +16,10 @@ public class RiskReportFormat implements IReportFormat {
 
         panel.add(new JLabel("damageCost:"));
         panel.add(new JLabel(String.valueOf(mission.getDamageCost())));
-
-        Curse curse = mission.getCurse();
-        if (curse != null) {
-            panel.add(new JLabel("curse.name:"));
-            panel.add(new JLabel(curse.getName()));
-
-            panel.add(new JLabel("curse.threatLevel:"));
-            panel.add(new JLabel(curse.getThreatLevel()));
-        }
+        
+        JButton curseButton = new JButton("Показать");
+        curseButton.addActionListener(_ -> actions.showCurseDialog(mission.getCurse()));
+        panel.add(new JLabel("curse:"));
+        panel.add(curseButton);
     }
 }
