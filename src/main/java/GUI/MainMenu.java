@@ -7,8 +7,10 @@ import Parsers.IParser;
 import Reports.IReportFormat;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 
 public class MainMenu extends JFrame {
     private final ParserFactory parserFactory;
@@ -23,13 +25,13 @@ public class MainMenu extends JFrame {
         JButton button = new JButton("Открыть магический поисковик");
 
         ButtonGroup buttonGroup = new ButtonGroup();
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = getJFileChooser();
 
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panel.setPreferredSize(new Dimension(260, 225));
         button.setPreferredSize(new Dimension(240, 40));
 
-        button.addActionListener(e -> {
+        button.addActionListener(_ -> {
             try {
                 int choice = chooser.showOpenDialog(this);
 
@@ -80,6 +82,38 @@ public class MainMenu extends JFrame {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
         return parser.parse(file.getAbsolutePath());
+    }
+
+    private JFileChooser getJFileChooser() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileFilter() {
+            final ArrayList<String> extensions = new ArrayList<>(parserFactory.getParsers().keySet());
+
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                }
+
+                String extension = getExtension(file);
+                return extensions.contains(extension);
+            }
+
+            @Override
+            public String getDescription() {
+                StringBuilder description = new StringBuilder();
+                for(String extension : extensions) {
+                    if(extension.isEmpty()) {
+                        description.append(" без расширения");
+                    } else {
+                        description.append(" ").append(extension);
+                    }
+                }
+                return description.toString();
+            }
+        });
+        return chooser;
     }
 
     private IReportFormat returnSelectedFormat(ButtonGroup buttonGroup) throws Exception {
