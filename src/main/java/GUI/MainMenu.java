@@ -23,22 +23,6 @@ public class MainMenu extends JFrame {
         JButton button = new JButton("Открыть магический поисковик");
 
         ButtonGroup buttonGroup = new ButtonGroup();
-        JRadioButton firstRadioButton = new JRadioButton("Краткое резюме");
-        JRadioButton secondRadioButton = new JRadioButton("Детализированный отчет");
-        JRadioButton thirdRadioButton = new JRadioButton("Отчет по рискам");
-        JRadioButton fourthRadioButton = new JRadioButton("Статистический отчет");
-
-        firstRadioButton.setActionCommand("summary");
-        secondRadioButton.setActionCommand("detailed");
-        thirdRadioButton.setActionCommand("risk");
-        fourthRadioButton.setActionCommand("statistics");
-        secondRadioButton.setSelected(true);
-
-        buttonGroup.add(firstRadioButton);
-        buttonGroup.add(secondRadioButton);
-        buttonGroup.add(thirdRadioButton);
-        buttonGroup.add(fourthRadioButton);
-
         JFileChooser chooser = new JFileChooser();
 
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -69,10 +53,19 @@ public class MainMenu extends JFrame {
 
         panel.add(label);
         panel.add(button);
-        panel.add(firstRadioButton);
-        panel.add(secondRadioButton);
-        panel.add(thirdRadioButton);
-        panel.add(fourthRadioButton);
+
+        for (String reportFormat : reportFormatFactory.getReportFormats().keySet()) {
+            JRadioButton radioButton = new JRadioButton(reportFormat);
+            radioButton.setActionCommand(reportFormat);
+
+            if (reportFormat.equals(reportFormatFactory.getDefaultReportType())) {
+                radioButton.setSelected(true);
+            }
+
+            buttonGroup.add(radioButton);
+            panel.add(radioButton);
+        }
+
         getContentPane().add(panel);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
