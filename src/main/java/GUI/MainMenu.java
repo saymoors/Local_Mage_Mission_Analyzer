@@ -105,7 +105,7 @@ public class MainMenu extends JFrame {
 
             @Override
             public String getDescription() {
-                return "Доступные руны: json, xml, yaml, yml, txt, без расширения";
+                return "Доступные руны: json, xml, yaml, yml, txt, txt(ini), без расширения";
             }
         });
         return chooser;
