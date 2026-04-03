@@ -1,8 +1,8 @@
 package GUI;
 
 import Entities.Mission;
-import Filtering.IFilter;
 import Filtering.FilterFactory;
+import Filtering.IFilter;
 import Filtering.Rules.*;
 import Parsers.ParserFactory;
 import Reports.ReportFormatFactory;
@@ -22,23 +22,17 @@ public class MainMenu extends JFrame {
     private final ReportFormatFactory reportFormatFactory;
     private final FilterFactory filterFactory;
     private final ValidatorFactory validatorFactory;
-    private final IValidator missionValidationChain;
-    private final IFilter missionFilterChain;
 
     public MainMenu() {
         parserFactory = new ParserFactory();
         reportFormatFactory = new ReportFormatFactory();
         filterFactory = new FilterFactory();
         validatorFactory = new ValidatorFactory();
-        missionValidationChain = validatorFactory.createValidationChain();
-        filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
-        filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
-        filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
-        missionFilterChain = filterFactory.createFilterChain();
 
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
         JButton button = new JButton("Открыть магический поисковик");
+        JCheckBox checkBox = new JCheckBox("Включить фильтр");
 
         ButtonGroup buttonGroup = new ButtonGroup();
         JFileChooser chooser = getJFileChooser();
@@ -48,8 +42,8 @@ public class MainMenu extends JFrame {
         button.setPreferredSize(new Dimension(240, 40));
         button.setMaximumSize(new Dimension(240, 40));
 
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         button.addActionListener(_ -> {
             try {
@@ -57,7 +51,7 @@ public class MainMenu extends JFrame {
 
                 if (choice == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
-                    Mission mission = parseSelectedFile(file);
+                    Mission mission = parseSelectedFile(file, checkBox.isSelected());
                     IReportFormat format = returnSelectedFormat(buttonGroup);
                     new SideMenu(mission, format);
                 } else {
@@ -76,11 +70,13 @@ public class MainMenu extends JFrame {
         panel.add(label);
         panel.add(Box.createVerticalStrut(10));
         panel.add(button);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(checkBox);
 
         for (String reportFormat : reportFormatFactory.getReportFormats().keySet()) {
             JRadioButton radioButton = new JRadioButton(reportFormat);
             radioButton.setActionCommand(reportFormat);
-            radioButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             if (reportFormat.equals(reportFormatFactory.getDefaultReportType())) {
                 radioButton.setSelected(true);
@@ -101,14 +97,19 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
-    private Mission parseSelectedFile(File file) throws Exception {
+    private Mission parseSelectedFile(File file, boolean isFilterOn) throws Exception {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
         Mission mission = parser.parse(file.getAbsolutePath());
-
+        if(isFilterOn) {
+            filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
+            filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
+            filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
+            IFilter missionFilterChain = filterFactory.createFilterChain();
+            missionFilterChain.filter(mission);
+        }
+        IValidator missionValidationChain = validatorFactory.createValidationChain();
         missionValidationChain.validate(mission);
-        missionFilterChain.filter(mission);
-
         return mission;
     }
 
