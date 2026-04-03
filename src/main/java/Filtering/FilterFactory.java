@@ -1,7 +1,5 @@
 package Filtering;
 
-import Filtering.Rules.DateFilter;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,11 +14,15 @@ public class FilterFactory {
         return filters;
     }
 
-    public IFilter createFilterChain() {
+    public IFilter createFilterChain() throws Exception {
+        if(filters.isEmpty()) {
+            throw new Exception("Необходимо подключить фильтры!");
+        }
+
         IFilter firstFilter = null;
         IFilter currentFilter = null;
 
-        for (IFilter filter : filters.values()) {
+        for(IFilter filter : filters.values()) {
             if (firstFilter == null) {
                 firstFilter = filter;
                 currentFilter = filter;

@@ -12,11 +12,11 @@ public class OutcomeFilter extends Filter {
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if (expectedOutcome == null || expectedOutcome.isBlank()) {
+        if(expectedOutcome == null || expectedOutcome.isBlank()) {
             return;
         }
 
-        if (!expectedOutcome.equals(mission.getOutcome())) {
+        if(!expectedOutcome.equals(mission.getOutcome())) {
             throw new Exception("Миссия не прошла фильтр по результату!");
         }
     }

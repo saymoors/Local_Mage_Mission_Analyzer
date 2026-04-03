@@ -12,11 +12,11 @@ public class DateFilter extends Filter {
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if (expectedDate == null || expectedDate.isBlank()) {
+        if(expectedDate == null || expectedDate.isBlank()) {
             return;
         }
 
-        if (!expectedDate.equals(mission.getDate())) {
+        if(!expectedDate.equals(mission.getDate())) {
             throw new Exception("Миссия не прошла фильтр по дате!");
         }
     }

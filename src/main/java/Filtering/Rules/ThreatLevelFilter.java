@@ -13,13 +13,16 @@ public class ThreatLevelFilter extends Filter {
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if (expectedThreatLevel == null || expectedThreatLevel.isBlank()) {
+        if(expectedThreatLevel == null || expectedThreatLevel.isBlank()) {
             return;
         }
 
         Curse curse = mission.getCurse();
+        if(curse == null) {
+            return;
+        }
 
-        if (!expectedThreatLevel.equals(curse.getThreatLevel())) {
+        if(!expectedThreatLevel.equals(curse.getThreatLevel())) {
             throw new Exception("Миссия не прошла фильтр по уровню угрозы!");
         }
     }

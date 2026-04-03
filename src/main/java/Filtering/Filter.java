@@ -15,7 +15,7 @@ public abstract class Filter implements IFilter {
     public final void filter(Mission mission) throws Exception {
         check(mission);
 
-        if (nextFilter != null) {
+        if(nextFilter != null) {
             nextFilter.filter(mission);
         }
     }
