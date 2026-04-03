@@ -17,18 +17,18 @@ public class SorcererFields extends Validator {
 
         for (int i = 0; i < sorcerers.size(); i++) {
             Sorcerer sorcerer = sorcerers.get(i);
-            String prefix = "Участник sorcerers[" + i + "]";
+            String prefix = "Колдун[" + i + "]";
 
             if (sorcerer == null) {
-                throw new Exception(prefix + " отсутствует.");
+                throw new Exception(prefix + " отсутствует!");
             }
 
             if (sorcerer.getName() == null || sorcerer.getName().isBlank()) {
-                throw new Exception(prefix + ": не заполнено поле name.");
+                throw new Exception(prefix + ": не заполнено поле name!");
             }
 
             if (sorcerer.getRank() == null || sorcerer.getRank().isBlank()) {
-                throw new Exception(prefix + ": не заполнено поле rank.");
+                throw new Exception(prefix + ": не заполнено поле rank!");
             }
         }
     }

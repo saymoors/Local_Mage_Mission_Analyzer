@@ -17,26 +17,26 @@ public class TechniqueFields extends Validator {
 
         for (int i = 0; i < techniques.size(); i++) {
             Technique technique = techniques.get(i);
-            String prefix = "Техника techniques[" + i + "]";
+            String prefix = "Техника[" + i + "]";
 
             if (technique == null) {
-                throw new Exception(prefix + " отсутствует.");
+                throw new Exception(prefix + " отсутствует!");
             }
 
             if (technique.getName() == null || technique.getName().isBlank()) {
-                throw new Exception(prefix + ": не заполнено поле name.");
+                throw new Exception(prefix + ": не заполнено поле name!");
             }
 
             if (technique.getType() == null || technique.getType().isBlank()) {
-                throw new Exception(prefix + ": не заполнено поле type.");
+                throw new Exception(prefix + ": не заполнено поле type!");
             }
 
             if (technique.getOwner() == null || technique.getOwner().isBlank()) {
-                throw new Exception(prefix + ": не заполнено поле owner.");
+                throw new Exception(prefix + ": не заполнено поле owner!");
             }
 
             if (technique.getDamage() < 0) {
-                throw new Exception(prefix + ": damage не может быть отрицательным.");
+                throw new Exception(prefix + ": damage не может быть отрицательным!");
             }
         }
     }
