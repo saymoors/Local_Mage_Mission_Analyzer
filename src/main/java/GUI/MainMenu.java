@@ -5,6 +5,8 @@ import Factories.ParserFactory;
 import Factories.ReportFormatFactory;
 import Parsers.IParser;
 import Reports.IReportFormat;
+import Validation.IValidator;
+import Validation.ValidatorFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -15,10 +17,14 @@ import java.util.ArrayList;
 public class MainMenu extends JFrame {
     private final ParserFactory parserFactory;
     private final ReportFormatFactory reportFormatFactory;
+    private final ValidatorFactory validatorFactory;
+    private final IValidator missionValidationChain;
 
     public MainMenu() {
         parserFactory = new ParserFactory();
         reportFormatFactory = new ReportFormatFactory();
+        validatorFactory = new ValidatorFactory();
+        missionValidationChain = validatorFactory.createValidationChain();
 
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
@@ -88,7 +94,9 @@ public class MainMenu extends JFrame {
     private Mission parseSelectedFile(File file) throws Exception {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
-        return parser.parse(file.getAbsolutePath());
+        Mission mission = parser.parse(file.getAbsolutePath());
+        missionValidationChain.validate(mission);
+        return mission;
     }
 
     private JFileChooser getJFileChooser() {
