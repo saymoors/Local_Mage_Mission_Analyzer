@@ -7,11 +7,11 @@ import Parsers.ParserTXT;
 import Parsers.ParserXML;
 import Parsers.ParserYAML;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ParserFactory {
-    private final Map<String, IParser> parsers = new HashMap<>();
+    private final Map<String, IParser> parsers = new LinkedHashMap<>();
 
     public ParserFactory() {
         register("json", new ParserJSON());
