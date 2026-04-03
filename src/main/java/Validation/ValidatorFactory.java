@@ -28,7 +28,7 @@ public class ValidatorFactory {
         IValidator firstRule = null;
         IValidator currentRule = null;
 
-        for (IValidator rule : rules.values()) {
+        for(IValidator rule : rules.values()) {
             if (firstRule == null) {
                 firstRule = rule;
                 currentRule = rule;

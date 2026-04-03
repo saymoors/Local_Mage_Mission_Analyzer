@@ -15,7 +15,7 @@ public abstract class Validator implements IValidator {
     public final void validate(Mission mission) throws Exception {
         check(mission);
 
-        if (nextRule != null) {
+        if(nextRule != null) {
             nextRule.validate(mission);
         }
     }

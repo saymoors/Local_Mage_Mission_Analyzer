@@ -14,7 +14,7 @@ public class MissionFields extends Validator {
 
         Curse curse = mission.getCurse();
 
-        if (curse == null) {
+        if(curse == null) {
             throw new Exception("Не заполнен обязательный блок curse!");
         }
 
@@ -23,7 +23,7 @@ public class MissionFields extends Validator {
     }
 
     private void require(String value, String message) throws Exception {
-        if (value == null || value.isBlank()) {
+        if(value == null || value.isBlank()) {
             throw new Exception(message);
         }
     }
