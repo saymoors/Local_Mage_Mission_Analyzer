@@ -3,11 +3,13 @@ package GUI;
 import Entities.Mission;
 import Filtering.FilterFactory;
 import Filtering.IFilter;
-import Filtering.Rules.*;
-import Parsers.ParserFactory;
-import Reports.ReportFormatFactory;
+import Filtering.Rules.DateFilter;
+import Filtering.Rules.OutcomeFilter;
+import Filtering.Rules.ThreatLevelFilter;
 import Parsers.IParser;
+import Parsers.ParserFactory;
 import Reports.IReportFormat;
+import Reports.ReportFormatFactory;
 import Validation.IValidator;
 import Validation.ValidatorFactory;
 
@@ -16,6 +18,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainMenu extends JFrame {
     private final ParserFactory parserFactory;
@@ -44,6 +47,7 @@ public class MainMenu extends JFrame {
 
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        checkBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         button.addActionListener(_ -> {
             try {
@@ -101,16 +105,33 @@ public class MainMenu extends JFrame {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
         Mission mission = parser.parse(file.getAbsolutePath());
-        if(isFilterOn) {
-            filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
-            filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
-            filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
-            IFilter missionFilterChain = filterFactory.createFilterChain();
+
+        IValidator missionValidationChain = validatorFactory.createValidationChain();
+        if (missionValidationChain != null) {
+            missionValidationChain.validate(mission);
+        }
+
+        IFilter missionFilterChain = createOptionalFilterChain(isFilterOn);
+        if (missionFilterChain != null) {
             missionFilterChain.filter(mission);
         }
-        IValidator missionValidationChain = validatorFactory.createValidationChain();
-        missionValidationChain.validate(mission);
+
         return mission;
+    }
+
+    private IFilter createOptionalFilterChain(boolean isFilterOn) throws Exception {
+        if (!isFilterOn) {
+            return null;
+        }
+
+        registerFilters();
+        return filterFactory.createFilterChain();
+    }
+
+    private void registerFilters() {
+        filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
+        filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
+        filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
     }
 
     private JFileChooser getJFileChooser() {
@@ -118,7 +139,6 @@ public class MainMenu extends JFrame {
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileFilter() {
             final ArrayList<String> extensions = new ArrayList<>(parserFactory.getParsers().keySet());
-
             @Override
             public boolean accept(File file) {
                 if (file.isDirectory()) {

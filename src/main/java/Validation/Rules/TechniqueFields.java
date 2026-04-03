@@ -11,31 +11,31 @@ public class TechniqueFields extends Validator {
     protected void check(Mission mission) throws Exception {
         List<Technique> techniques = mission.getTechniques();
 
-        if (techniques == null) {
+        if(techniques == null) {
             return;
         }
 
-        for (int i = 0; i < techniques.size(); i++) {
+        for(int i = 0; i < techniques.size(); i++) {
             Technique technique = techniques.get(i);
             String prefix = "Техника[" + i + "]";
 
-            if (technique == null) {
+            if(technique == null) {
                 throw new Exception(prefix + " отсутствует!");
             }
 
-            if (technique.getName() == null || technique.getName().isBlank()) {
+            if(technique.getName() == null || technique.getName().isBlank()) {
                 throw new Exception(prefix + ": не заполнено поле name!");
             }
 
-            if (technique.getType() == null || technique.getType().isBlank()) {
+            if(technique.getType() == null || technique.getType().isBlank()) {
                 throw new Exception(prefix + ": не заполнено поле type!");
             }
 
-            if (technique.getOwner() == null || technique.getOwner().isBlank()) {
+            if(technique.getOwner() == null || technique.getOwner().isBlank()) {
                 throw new Exception(prefix + ": не заполнено поле owner!");
             }
 
-            if (technique.getDamage() < 0) {
+            if(technique.getDamage() < 0) {
                 throw new Exception(prefix + ": damage не может быть отрицательным!");
             }
         }
