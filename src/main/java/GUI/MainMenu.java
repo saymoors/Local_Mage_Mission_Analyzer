@@ -6,6 +6,8 @@ import Filtering.IFilter;
 import Filtering.Rules.DateFilter;
 import Filtering.Rules.OutcomeFilter;
 import Filtering.Rules.ThreatLevelFilter;
+import Logging.LogPublisher;
+import Logging.Rules.ConsoleLogger;
 import Parsers.IParser;
 import Parsers.ParserFactory;
 import Reports.IReportFormat;
@@ -18,19 +20,22 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainMenu extends JFrame {
     private final ParserFactory parserFactory;
     private final ReportFormatFactory reportFormatFactory;
     private final FilterFactory filterFactory;
     private final ValidatorFactory validatorFactory;
+    private final LogPublisher logPublisher;
 
     public MainMenu() {
         parserFactory = new ParserFactory();
         reportFormatFactory = new ReportFormatFactory();
         filterFactory = new FilterFactory();
         validatorFactory = new ValidatorFactory();
+        logPublisher = new LogPublisher();
+
+        registerLoggers();
 
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
@@ -55,13 +60,19 @@ public class MainMenu extends JFrame {
 
                 if (choice == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
+                    logPublisher.publish("GUI", "Выбран файл: " + file.getAbsolutePath());
+
                     Mission mission = parseSelectedFile(file, checkBox.isSelected());
                     IReportFormat format = returnSelectedFormat(buttonGroup);
+
+                    logPublisher.publish("REPORT", "Выбран формат отчета: " + buttonGroup.getSelection().getActionCommand());
                     new SideMenu(mission, format);
+                    logPublisher.publish("REPORT", "Отчет успешно открыт");
                 } else {
                     throw new Exception("Вы не выбрали миссию!");
                 }
             } catch (Exception exception) {
+                logPublisher.publish("ERROR", exception.getMessage());
                 JOptionPane.showMessageDialog(
                         this,
                         exception.getMessage(),
@@ -104,27 +115,35 @@ public class MainMenu extends JFrame {
     private Mission parseSelectedFile(File file, boolean isFilterOn) throws Exception {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
+        logPublisher.publish("PARSER", "Выбран парсер для расширения: " + extension);
+
         Mission mission = parser.parse(file.getAbsolutePath());
+        logPublisher.publish("PARSER", "Миссия успешно прочитана");
 
         IValidator missionValidationChain = validatorFactory.createValidationChain();
         if (missionValidationChain != null) {
             missionValidationChain.validate(mission);
+            logPublisher.publish("VALIDATION", "Миссия отвалидирована");
         }
 
-        IFilter missionFilterChain = createOptionalFilterChain(isFilterOn);
+        IFilter missionFilterChain = createFilterChain(isFilterOn);
         if (missionFilterChain != null) {
             missionFilterChain.filter(mission);
+            logPublisher.publish("FILTER", "Миссия отфильтрована");
+        } else {
+            logPublisher.publish("FILTER", "Фильтрация отключена");
         }
 
         return mission;
     }
 
-    private IFilter createOptionalFilterChain(boolean isFilterOn) throws Exception {
+    private IFilter createFilterChain(boolean isFilterOn) throws Exception {
         if (!isFilterOn) {
             return null;
         }
 
         registerFilters();
+        logPublisher.publish("FILTER", "Фильтры подключены");
         return filterFactory.createFilterChain();
     }
 
@@ -134,11 +153,16 @@ public class MainMenu extends JFrame {
         filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
     }
 
+    private void registerLoggers() {
+        logPublisher.register("ConsoleLogger", new ConsoleLogger());
+    }
+
     private JFileChooser getJFileChooser() {
         JFileChooser chooser = new JFileChooser("C://Users//HONOR//Documents//Теория и технология программирования//Лабораторная работа 2//Тестовые файлы");
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileFilter() {
             final ArrayList<String> extensions = new ArrayList<>(parserFactory.getParsers().keySet());
+
             @Override
             public boolean accept(File file) {
                 if (file.isDirectory()) {
