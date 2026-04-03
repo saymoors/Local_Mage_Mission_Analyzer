@@ -1,6 +1,9 @@
 package GUI;
 
 import Entities.Mission;
+import Filtering.IFilter;
+import Filtering.FilterFactory;
+import Filtering.Rules.*;
 import Parsers.ParserFactory;
 import Reports.ReportFormatFactory;
 import Parsers.IParser;
@@ -17,14 +20,21 @@ import java.util.ArrayList;
 public class MainMenu extends JFrame {
     private final ParserFactory parserFactory;
     private final ReportFormatFactory reportFormatFactory;
+    private final FilterFactory filterFactory;
     private final ValidatorFactory validatorFactory;
     private final IValidator missionValidationChain;
+    private final IFilter missionFilterChain;
 
     public MainMenu() {
         parserFactory = new ParserFactory();
         reportFormatFactory = new ReportFormatFactory();
+        filterFactory = new FilterFactory();
         validatorFactory = new ValidatorFactory();
         missionValidationChain = validatorFactory.createValidationChain();
+        filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
+        filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
+        filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
+        missionFilterChain = filterFactory.createFilterChain();
 
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
@@ -95,7 +105,10 @@ public class MainMenu extends JFrame {
         String extension = getExtension(file);
         IParser parser = parserFactory.createParser(extension);
         Mission mission = parser.parse(file.getAbsolutePath());
+
         missionValidationChain.validate(mission);
+        missionFilterChain.filter(mission);
+
         return mission;
     }
 
