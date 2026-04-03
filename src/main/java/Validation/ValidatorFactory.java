@@ -11,9 +11,9 @@ public class ValidatorFactory {
     private final Map<String, IValidator> rules = new LinkedHashMap<>();
 
     public ValidatorFactory() {
-        register("requiredMissionFields", new MissionFields());
-        register("sorcererFields", new SorcererFields());
-        register("techniqueFields", new TechniqueFields());
+        register("MissionFields", new MissionFields());
+        register("SorcererFields", new SorcererFields());
+        register("TechniqueFields", new TechniqueFields());
     }
 
     public void register(String ruleName, IValidator rule) {
