@@ -1,10 +1,16 @@
 package Logging;
 
+import Logging.Rules.ConsoleLogger;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LogPublisher {
     private final Map<String, ILogger> loggers = new LinkedHashMap<>();
+
+    public LogPublisher() {
+        register("ConsoleLogger", new ConsoleLogger());
+    }
 
     public void register(String loggerName, ILogger logger) {
         loggers.put(loggerName, logger);

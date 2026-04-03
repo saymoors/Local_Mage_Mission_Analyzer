@@ -35,8 +35,6 @@ public class MainMenu extends JFrame {
         validatorFactory = new ValidatorFactory();
         logPublisher = new LogPublisher();
 
-        registerLoggers();
-
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Выберите миссию:");
         JButton button = new JButton("Открыть магический поисковик");
@@ -151,10 +149,6 @@ public class MainMenu extends JFrame {
         filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
         filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
         filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
-    }
-
-    private void registerLoggers() {
-        logPublisher.register("ConsoleLogger", new ConsoleLogger());
     }
 
     private JFileChooser getJFileChooser() {
