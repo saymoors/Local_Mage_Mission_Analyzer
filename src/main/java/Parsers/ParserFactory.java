@@ -1,11 +1,4 @@
-package Factories;
-
-import Parsers.IParser;
-import Parsers.ParserFWE;
-import Parsers.ParserJSON;
-import Parsers.ParserTXT;
-import Parsers.ParserXML;
-import Parsers.ParserYAML;
+package Parsers;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

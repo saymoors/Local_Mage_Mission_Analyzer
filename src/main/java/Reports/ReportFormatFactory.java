@@ -1,10 +1,4 @@
-package Factories;
-
-import Reports.DetailedReportFormat;
-import Reports.IReportFormat;
-import Reports.RiskReportFormat;
-import Reports.StatisticsReportFormat;
-import Reports.SummaryReportFormat;
+package Reports;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

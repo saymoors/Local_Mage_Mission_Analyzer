@@ -1,8 +1,8 @@
 package GUI;
 
 import Entities.Mission;
-import Factories.ParserFactory;
-import Factories.ReportFormatFactory;
+import Parsers.ParserFactory;
+import Reports.ReportFormatFactory;
 import Parsers.IParser;
 import Reports.IReportFormat;
 import Validation.IValidator;
