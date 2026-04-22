@@ -1,6 +1,8 @@
 package GUI;
 
 import Entities.Mission;
+import Entities.Enums.Outcome;
+import Entities.Enums.ThreatLevel;
 import Filtering.FilterFactory;
 import Filtering.IFilter;
 import Filtering.Rules.DateFilter;
@@ -147,8 +149,8 @@ public class MainMenu extends JFrame {
 
     private void registerFilters() {
         filterFactory.register("DateFilter", new DateFilter("2024-10-12"));
-        filterFactory.register("OutcomeFilter", new OutcomeFilter("SUCCESS"));
-        filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter("HIGH"));
+        filterFactory.register("OutcomeFilter", new OutcomeFilter(Outcome.SUCCESS));
+        filterFactory.register("ThreatLevelFilter", new ThreatLevelFilter(ThreatLevel.HIGH));
     }
 
     private JFileChooser getJFileChooser() {

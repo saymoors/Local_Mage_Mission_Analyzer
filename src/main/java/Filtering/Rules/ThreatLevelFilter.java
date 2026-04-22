@@ -1,28 +1,19 @@
 package Filtering.Rules;
 
-import Entities.Curse;
 import Entities.Mission;
+import Entities.Enums.ThreatLevel;
 import Filtering.Filter;
 
 public class ThreatLevelFilter extends Filter {
-    private final String expectedThreatLevel;
+    private final ThreatLevel expectedThreatLevel;
 
-    public ThreatLevelFilter(String expectedThreatLevel) {
+    public ThreatLevelFilter(ThreatLevel expectedThreatLevel) {
         this.expectedThreatLevel = expectedThreatLevel;
     }
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if(expectedThreatLevel == null || expectedThreatLevel.isBlank()) {
-            return;
-        }
-
-        Curse curse = mission.getCurse();
-        if(curse == null) {
-            return;
-        }
-
-        if(!expectedThreatLevel.equals(curse.getThreatLevel())) {
+        if (expectedThreatLevel != mission.getCurse().getThreatLevel()) {
             throw new Exception("Миссия не прошла фильтр по уровню угрозы!");
         }
     }
