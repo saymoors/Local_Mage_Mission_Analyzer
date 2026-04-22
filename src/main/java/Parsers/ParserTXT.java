@@ -1,70 +1,68 @@
 package Parsers;
 
-import Builders.MissionBuilder;
 import Entities.Mission;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ParserTXT implements IParser {
+public class ParserTXT extends BaseParser {
     @Override
     public Mission parse(String file) throws Exception {
-        MissionBuilder builder = new MissionBuilder();
-        List<String> data = new ArrayList<>();
-
+        List<String> data;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    data.add(line);
-                }
-            }
-            reader.close();
-
-            if (!data.isEmpty() && data.getFirst().startsWith("[")) {
-                return new ParserTXTINI().parse(file);
-            }
-
-            int i = 0;
-
-            builder.missionId(cuttingOf(data.get(i++)));
-            builder.date(cuttingOf(data.get(i++)));
-            builder.location(cuttingOf(data.get(i++)));
-            builder.outcome(cuttingOf(data.get(i++)));
-            builder.damageCost(Integer.parseInt(cuttingOf(data.get(i++))));
-
-            builder.curse(cuttingOf(data.get(i++)), cuttingOf(data.get(i++)));
-
-            while (i < data.size() && data.get(i).startsWith("sorcerer[")) {
-                builder.addSorcerer(cuttingOf(data.get(i++)), cuttingOf(data.get(i++)));
-            }
-
-            while (i < data.size() && data.get(i).startsWith("technique[")) {
-                builder.addTechnique(
-                        cuttingOf(data.get(i++)),
-                        cuttingOf(data.get(i++)),
-                        cuttingOf(data.get(i++)),
-                        Integer.parseInt(cuttingOf(data.get(i++)))
-                );
-            }
-
-            if (i < data.size() && data.get(i).startsWith("note:")) {
-                builder.comment(cuttingOf(data.get(i)));
-            }
+            data = TextMissionParserSupport.readNonEmptyLines(file);
         } catch (Exception exception) {
-            throw new Exception("Не удалось прочитать TXT-руну!");
+            throw new Exception("Не удалось прочитать TXT-руну: " + exception.getMessage(), exception);
         }
 
-        return builder.build();
-    }
+        if (!data.isEmpty() && data.getFirst().startsWith("[")) {
+            return new ParserTXTINI().parse(file);
+        }
 
-    private String cuttingOf(String line) {
-        int colonIndex = line.indexOf(':');
-        return line.substring(colonIndex + 2);
+        Map<String, Object> fields = new LinkedHashMap<>();
+
+        for (String line : data) {
+            TextMissionParserSupport.KeyValue keyValue = TextMissionParserSupport.splitKeyValue(line, ':');
+            String rawKey = keyValue.key().trim();
+            String value = keyValue.value();
+
+            switch (rawKey) {
+                case "missionId", "date", "location", "outcome", "damageCost", "curse.name", "curse.threatLevel" -> {
+                    TextMissionParserSupport.put(fields, rawKey, value);
+                    continue;
+                }
+                case "note" -> {
+                    TextMissionParserSupport.put(fields, "comment", value);
+                    continue;
+                }
+                default -> {
+                }
+            }
+
+            TextMissionParserSupport.IndexedField sorcererField = TextMissionParserSupport.parseSorcererKey(rawKey);
+            if (sorcererField != null) {
+                TextMissionParserSupport.put(
+                        fields,
+                        "sorcerers[" + sorcererField.index() + "]." + sorcererField.field(),
+                        value
+                );
+                continue;
+            }
+
+            TextMissionParserSupport.IndexedField techniqueField = TextMissionParserSupport.parseTechniqueKey(rawKey);
+            if (techniqueField != null) {
+                TextMissionParserSupport.put(
+                        fields,
+                        "techniques[" + techniqueField.index() + "]." + techniqueField.field(),
+                        value
+                );
+                continue;
+            }
+
+            throw new Exception("Неизвестное TXT-поле: " + rawKey);
+        }
+
+        return buildMission(fields);
     }
 }

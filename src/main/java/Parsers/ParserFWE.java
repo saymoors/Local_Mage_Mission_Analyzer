@@ -1,121 +1,107 @@
 package Parsers;
 
-import Builders.MissionBuilder;
 import Entities.Mission;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ParserFWE implements IParser {
+public class ParserFWE extends BaseParser {
     @Override
     public Mission parse(String file) throws Exception {
-        MissionBuilder builder = new MissionBuilder();
-        List<String> data = new ArrayList<>();
-
+        List<String> data;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    data.add(line);
-                }
-            }
-            reader.close();
-
-            int i = 0;
-
-            String[] missionParts = splitLine(data.get(i++));
-            builder.missionId(missionParts[1]);
-            builder.date(missionParts[2]);
-            builder.location(missionParts[3]);
-
-            String[] curseParts = splitLine(data.get(i++));
-            builder.curse(curseParts[1], curseParts[2]);
-
-            while (i < data.size() && data.get(i).startsWith("SORCERER_ASSIGNED|")) {
-                String[] sorcererParts = splitLine(data.get(i++));
-                builder.addSorcerer(sorcererParts[1], sorcererParts[2]);
-            }
-
-            while (i < data.size() && data.get(i).startsWith("TECHNIQUE_USED|")) {
-                String[] techniqueParts = splitLine(data.get(i++));
-                builder.addTechnique(
-                        techniqueParts[1],
-                        techniqueParts[2],
-                        techniqueParts[3],
-                        Integer.parseInt(techniqueParts[4])
-                );
-            }
-
-            while (i < data.size() && data.get(i).startsWith("TIMELINE_EVENT|")) {
-                String[] timelineEventParts = splitLine(data.get(i++));
-                builder.addOperationTimelineEvent(
-                        timelineEventParts[1],
-                        timelineEventParts[2],
-                        timelineEventParts[3]
-                );
-            }
-
-            List<String> attackPatterns = new ArrayList<>();
-            String behaviorType = null;
-
-            while (i < data.size() && data.get(i).startsWith("ENEMY_ACTION|")) {
-                String[] enemyParts = splitLine(data.get(i++));
-
-                if (behaviorType == null) {
-                    behaviorType = enemyParts[1];
-                }
-
-                if (enemyParts[2].isBlank()) {
-                    attackPatterns.add(enemyParts[1]);
-                } else {
-                    attackPatterns.add(enemyParts[1] + ": " + enemyParts[2]);
-                }
-            }
-
-            builder.enemyActivity(behaviorType, null, null, null, attackPatterns, null);
-
-            String[] impactParts = splitLine(data.get(i++));
-            int evacuated = 0;
-            int injured = 0;
-            int missing = 0;
-
-            for (int j = 1; j < impactParts.length; j++) {
-                if (impactParts[j].startsWith("evacuated=")) {
-                    evacuated = Integer.parseInt(cuttingOf(impactParts[j]));
-                }
-
-                if (impactParts[j].startsWith("injured=")) {
-                    injured = Integer.parseInt(cuttingOf(impactParts[j]));
-                }
-
-                if (impactParts[j].startsWith("missing=")) {
-                    missing = Integer.parseInt(cuttingOf(impactParts[j]));
-                }
-            }
-
-            builder.civilianImpact(evacuated, injured, missing, null);
-
-            String[] missionResult = splitLine(data.get(i));
-            builder.outcome(missionResult[1]);
-            builder.damageCost(Integer.parseInt(cuttingOf(missionResult[2])));
-        } catch (Exception exception) {
+            data = TextMissionParserSupport.readNonEmptyLines(file);
+        } catch (IOException exception) {
             throw new Exception("Не удалось прочитать FWE-руну!");
         }
 
-        return builder.build();
+        Map<String, Object> fields = new LinkedHashMap<>();
+
+        int sorcererIndex = 0;
+        int techniqueIndex = 0;
+        int timelineIndex = 0;
+        int attackPatternIndex = 0;
+
+        for (String line : data) {
+            String[] parts = line.split("\\|", -1);
+            String recordType = parts[0].trim();
+
+            switch (recordType) {
+                case "MISSION_CREATED" -> {
+                    putPart(fields, "missionId", parts, 1);
+                    putPart(fields, "date", parts, 2);
+                    putPart(fields, "location", parts, 3);
+                }
+                case "CURSE_DETECTED" -> {
+                    putPart(fields, "curse.name", parts, 1);
+                    putPart(fields, "curse.threatLevel", parts, 2);
+                }
+                case "SORCERER_ASSIGNED" -> {
+                    putPart(fields, "sorcerers[" + sorcererIndex + "].name", parts, 1);
+                    putPart(fields, "sorcerers[" + sorcererIndex + "].rank", parts, 2);
+                    sorcererIndex++;
+                }
+                case "TECHNIQUE_USED" -> {
+                    putPart(fields, "techniques[" + techniqueIndex + "].name", parts, 1);
+                    putPart(fields, "techniques[" + techniqueIndex + "].type", parts, 2);
+                    putPart(fields, "techniques[" + techniqueIndex + "].owner", parts, 3);
+                    putPart(fields, "techniques[" + techniqueIndex + "].damage", parts, 4);
+                    techniqueIndex++;
+                }
+                case "TIMELINE_EVENT" -> {
+                    putPart(fields, "operationTimeline[" + timelineIndex + "].timestamp", parts, 1);
+                    putPart(fields, "operationTimeline[" + timelineIndex + "].type", parts, 2);
+                    putPart(fields, "operationTimeline[" + timelineIndex + "].description", parts, 3);
+                    timelineIndex++;
+                }
+                case "ENEMY_ACTION" -> {
+                    putPartIfAbsent(fields, "enemyActivity.behaviorType", parts, 1);
+
+                    if (parts.length > 2) {
+                        String attackPattern = parts[2].isBlank() ? parts[1] : parts[1] + ": " + parts[2];
+                        TextMissionParserSupport.put(fields, "enemyActivity.attackPatterns[" + attackPatternIndex++ + "]", attackPattern);
+                    }
+                }
+                case "CIVILIAN_IMPACT" -> applyKeyValuePairs(fields, parts, 1, "civilianImpact.");
+                case "MISSION_RESULT" -> {
+                    putPart(fields, "outcome", parts, 1);
+                    applyKeyValuePairs(fields, parts, 2, "");
+                }
+                default -> throw new Exception("Неизвестный FWE-блок: " + recordType);
+            }
+        }
+
+        return buildMission(fields);
     }
 
-    private String[] splitLine(String line) {
-        return line.split("\\|", -1);
+    private void putPart(Map<String, Object> fields, String key, String[] parts, int index) {
+        if (index < parts.length) {
+            TextMissionParserSupport.put(fields, key, parts[index]);
+        }
     }
 
-    private String cuttingOf(String line) {
-        int equalsIndex = line.indexOf('=');
-        return line.substring(equalsIndex + 1);
+    private void putPartIfAbsent(Map<String, Object> fields, String key, String[] parts, int index) {
+        if (!fields.containsKey(key)) {
+            putPart(fields, key, parts, index);
+        }
+    }
+
+    private void applyKeyValuePairs(Map<String, Object> fields, String[] parts, int startIndex, String prefix) throws Exception {
+        for (int i = startIndex; i < parts.length; i++) {
+            if (!parts[i].contains("=")) {
+                continue;
+            }
+
+            int equalsIndex = parts[i].indexOf('=');
+            String key = parts[i].substring(0, equalsIndex).trim();
+            String value = parts[i].substring(equalsIndex + 1);
+
+            switch (key) {
+                case "damageCost", "evacuated", "injured", "missing" -> TextMissionParserSupport.put(fields, prefix + key, value);
+                default -> throw new Exception("Неизвестное FWE-блок: " + key);
+            }
+        }
     }
 }
