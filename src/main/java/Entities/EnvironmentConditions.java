@@ -1,9 +1,11 @@
 package Entities;
 
+import Entities.Enums.Visibility;
+
 public class EnvironmentConditions {
     private String weather;
     private String timeOfDay;
-    private String visibility;
+    private Visibility visibility;
     private int cursedEnergyDensity;
 
     public EnvironmentConditions() { }
@@ -24,11 +26,11 @@ public class EnvironmentConditions {
         this.timeOfDay = timeOfDay;
     }
 
-    public String getVisibility() {
+    public Visibility getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(String visibility) {
+    public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
 

@@ -1,5 +1,7 @@
 package Entities;
 
+import Entities.Enums.Outcome;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class Mission {
     private String missionId;
     private String date;
     private String location;
-    private String outcome;
+    private Outcome outcome;
     private int damageCost;
     private Curse curse;
     private List<Sorcerer> sorcerers;
@@ -52,11 +54,11 @@ public class Mission {
         this.location = location;
     }
 
-    public String getOutcome() {
+    public Outcome getOutcome() {
         return outcome;
     }
 
-    public void setOutcome(String outcome) {
+    public void setOutcome(Outcome outcome) {
         this.outcome = outcome;
     }
 

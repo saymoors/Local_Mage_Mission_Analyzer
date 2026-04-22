@@ -1,12 +1,15 @@
 package Entities;
 
+import Entities.Enums.EscalationRisk;
+import Entities.Enums.Mobility;
+
 import java.util.List;
 
 public class EnemyActivity {
     private String behaviorType;
     private String targetPriority;
-    private String mobility;
-    private String escalationRisk;
+    private Mobility mobility;
+    private EscalationRisk escalationRisk;
     private List<String> attackPatterns;
     private List<String> countermeasuresUsed;
 
@@ -28,19 +31,19 @@ public class EnemyActivity {
         this.targetPriority = targetPriority;
     }
 
-    public String getMobility() {
+    public Mobility getMobility() {
         return mobility;
     }
 
-    public void setMobility(String mobility) {
+    public void setMobility(Mobility mobility) {
         this.mobility = mobility;
     }
 
-    public String getEscalationRisk() {
+    public EscalationRisk getEscalationRisk() {
         return escalationRisk;
     }
 
-    public void setEscalationRisk(String escalationRisk) {
+    public void setEscalationRisk(EscalationRisk escalationRisk) {
         this.escalationRisk = escalationRisk;
     }
 

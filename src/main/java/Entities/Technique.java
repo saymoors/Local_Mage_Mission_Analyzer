@@ -1,14 +1,16 @@
 package Entities;
 
+import Entities.Enums.TechniqueType;
+
 public class Technique {
     private String name;
-    private String type;
+    private TechniqueType type;
     private String owner;
     private int damage;
 
     public Technique() { }
 
-    public Technique(String name, String type, String owner, int damage) {
+    public Technique(String name, TechniqueType type, String owner, int damage) {
         this.name = name;
         this.type = type;
         this.owner = owner;
@@ -23,11 +25,11 @@ public class Technique {
         this.name = name;
     }
 
-    public String getType() {
+    public TechniqueType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TechniqueType type) {
         this.type = type;
     }
 

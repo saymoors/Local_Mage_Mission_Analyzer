@@ -1,10 +1,12 @@
 package Entities;
 
+import Entities.Enums.PublicExposureRisk;
+
 public class CivilianImpact {
     private int evacuated;
     private int injured;
     private int missing;
-    private String publicExposureRisk;
+    private PublicExposureRisk publicExposureRisk;
 
     public CivilianImpact() { }
 
@@ -32,11 +34,11 @@ public class CivilianImpact {
         this.missing = missing;
     }
 
-    public String getPublicExposureRisk() {
+    public PublicExposureRisk getPublicExposureRisk() {
         return publicExposureRisk;
     }
 
-    public void setPublicExposureRisk(String publicExposureRisk) {
+    public void setPublicExposureRisk(PublicExposureRisk publicExposureRisk) {
         this.publicExposureRisk = publicExposureRisk;
     }
 }
