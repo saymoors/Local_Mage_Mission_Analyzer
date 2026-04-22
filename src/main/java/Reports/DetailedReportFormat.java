@@ -17,7 +17,7 @@ public class DetailedReportFormat implements IReportFormat {
         panel.add(new JLabel(mission.getLocation()));
 
         panel.add(new JLabel("outcome:"));
-        panel.add(new JLabel(mission.getOutcome()));
+        panel.add(new JLabel(String.valueOf(mission.getOutcome())));
 
         panel.add(new JLabel("damageCost:"));
         panel.add(new JLabel(String.valueOf(mission.getDamageCost())));
