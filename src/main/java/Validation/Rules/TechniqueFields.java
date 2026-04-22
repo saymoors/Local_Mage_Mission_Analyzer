@@ -27,7 +27,7 @@ public class TechniqueFields extends Validator {
                 throw new Exception(prefix + ": не заполнено поле name!");
             }
 
-            if(technique.getType() == null || technique.getType().isBlank()) {
+            if(technique.getType() == null) {
                 throw new Exception(prefix + ": не заполнено поле type!");
             }
 

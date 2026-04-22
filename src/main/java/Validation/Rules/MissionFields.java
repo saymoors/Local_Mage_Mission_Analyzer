@@ -22,8 +22,8 @@ public class MissionFields extends Validator {
         require(curse.getThreatLevel(), "Не заполнено обязательное поле curse.threatLevel!");
     }
 
-    private void require(String value, String message) throws Exception {
-        if(value == null || value.isBlank()) {
+    private void require(Object value, String message) throws Exception {
+        if(value == null) {
             throw new Exception(message);
         }
     }

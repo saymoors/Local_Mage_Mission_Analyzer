@@ -27,7 +27,7 @@ public class SorcererFields extends Validator {
                 throw new Exception(prefix + ": не заполнено поле name!");
             }
 
-            if(sorcerer.getRank() == null || sorcerer.getRank().isBlank()) {
+            if(sorcerer.getRank() == null) {
                 throw new Exception(prefix + ": не заполнено поле rank!");
             }
         }
