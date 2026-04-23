@@ -5,6 +5,8 @@ import Archive.Repository.MissionArchiveRepository;
 import Entities.Mission;
 import Parsers.IParser;
 import Parsers.ParserFactory;
+import Reports.IReportFormat;
+import Reports.ReportFormatFactory;
 import Validation.IValidator;
 import Validation.ValidatorFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class MissionArchiveService {
     private final MissionArchiveRepository repository;
     private final ValidatorFactory validatorFactory = new ValidatorFactory();
     private final ParserFactory parserFactory = new ParserFactory();
+    private final ReportFormatFactory reportFormatFactory = new ReportFormatFactory();
 
     public MissionArchiveService(MissionArchiveRepository repository) {
         this.repository = repository;
@@ -80,6 +83,18 @@ public class MissionArchiveService {
         }
     }
 
+    public String getMissionReport(String missionId, String reportType) {
+        Mission mission = getMission(missionId);
+        String resolvedReportType = resolveReportType(reportType);
+
+        try {
+            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
+            return reportFormat.render(mission);
+        } catch(Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
     private void validateMission(Mission mission) {
         if(mission == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело запроса с миссией отсутствует");
@@ -96,13 +111,25 @@ public class MissionArchiveService {
     }
 
     private String resolveFormat(String originalFilename) {
+        if(originalFilename == null || originalFilename.isBlank()) {
+            return "";
+        }
+
         int dotIndex = originalFilename.lastIndexOf('.');
 
         if(dotIndex < 0) {
             return "";
         }
 
-        return originalFilename.substring(dotIndex + 1).trim().toLowerCase();
+        return originalFilename.substring(dotIndex + 1);
+    }
+
+    private String resolveReportType(String reportType) {
+        if(reportType == null || reportType.isBlank()) {
+            return reportFormatFactory.getDefaultReportType();
+        }
+
+        return reportType;
     }
 
     private Path createTempFile(String format) throws IOException {
@@ -117,7 +144,7 @@ public class MissionArchiveService {
 
         try {
             Files.deleteIfExists(tempFile);
-        } catch(IOException _) {
+        } catch(IOException ignored) {
         }
     }
 }
