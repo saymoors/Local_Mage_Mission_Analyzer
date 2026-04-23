@@ -1,23 +1,26 @@
 package Archive.Controller;
 
-import Entities.Mission;
 import Archive.Dto.MissionSummaryResponse;
 import Archive.Service.MissionArchiveService;
+import Entities.Mission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/missions")
-@Tag(name = "Missions")
+@Tag(name = "Missions", description = "Операции с миссиями в архиве")
 public class MissionController {
     private final MissionArchiveService missionArchiveService;
 
@@ -58,5 +61,17 @@ public class MissionController {
     )
     public Mission saveMission(@RequestBody Mission mission) {
         return missionArchiveService.saveMission(mission);
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Импортировать миссию из файла",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Миссия импортирована и сохранена"),
+                    @ApiResponse(responseCode = "400", description = "Ошибка чтения или валидации файла")
+            }
+    )
+    public Mission importMission(@RequestParam("file") MultipartFile file) {
+        return missionArchiveService.importMission(file);
     }
 }
