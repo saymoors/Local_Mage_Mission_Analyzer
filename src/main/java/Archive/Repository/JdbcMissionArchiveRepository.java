@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
@@ -53,19 +52,23 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
             connection.setAutoCommit(false);
 
             try {
-                boolean exists = findMission(connection, missionId).isPresent();
+                Mission existingMission = findMission(connection, missionId);
 
-                if(exists) {
-                    updateMissionRow(connection, mission);
-                } else {
+                if(existingMission == null) {
                     insertMissionRow(connection, mission);
+                } else {
+                    updateMissionRow(connection, mission);
                 }
 
                 replaceCollections(connection, mission);
                 connection.commit();
 
-                return findMission(connection, missionId)
-                        .orElseThrow(() -> new IllegalStateException("Миссия не найдена после сохранения в PostgreSQL"));
+                Mission savedMission = findMission(connection, missionId);
+                if(savedMission == null) {
+                    throw new IllegalStateException("Миссия не найдена после сохранения в PostgreSQL");
+                }
+
+                return savedMission;
             } catch(SQLException exception) {
                 connection.rollback();
                 throw exception;
@@ -76,7 +79,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
     }
 
     @Override
-    public Optional<Mission> findByMissionId(String missionId) {
+    public Mission findByMissionId(String missionId) {
         try(Connection connection = openConnection()) {
             return findMission(connection, missionId);
         } catch(SQLException exception) {
@@ -100,7 +103,11 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
             List<Mission> missions = new ArrayList<>();
 
             for(String missionId : missionIds) {
-                findMission(connection, missionId).ifPresent(missions::add);
+                Mission mission = findMission(connection, missionId);
+
+                if(mission != null) {
+                    missions.add(mission);
+                }
             }
 
             return missions;
@@ -385,7 +392,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
         }
     }
 
-    private Optional<Mission> findMission(Connection connection, String missionId) throws SQLException {
+    private Mission findMission(Connection connection, String missionId) throws SQLException {
         String sql = "SELECT * FROM missions WHERE mission_id = ?";
 
         try(PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -393,7 +400,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
 
             try(ResultSet resultSet = statement.executeQuery()) {
                 if(!resultSet.next()) {
-                    return Optional.empty();
+                    return null;
                 }
 
                 Mission mission = new Mission();
@@ -425,7 +432,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
                     throw new IllegalStateException("Сохраненная миссия в PostgreSQL имеет несогласованные данные", exception);
                 }
 
-                return Optional.of(mission);
+                return mission;
             }
         }
     }
