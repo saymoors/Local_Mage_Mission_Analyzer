@@ -12,7 +12,7 @@ public class StatisticsAnalyzer extends Analyzer {
         int techniquesCount = mission.getTechniques() == null ? 0 : mission.getTechniques().size();
         int totalDamage = 0;
 
-        if (mission.getTechniques() != null) {
+        if(mission.getTechniques() != null) {
             for (Technique technique : mission.getTechniques()) {
                 totalDamage += technique.getDamage();
             }
@@ -22,7 +22,7 @@ public class StatisticsAnalyzer extends Analyzer {
         analysisResult.putMetric("techniques.count", techniquesCount);
         analysisResult.putMetric("techniques.totalDamage", totalDamage);
 
-        if (techniquesCount > 0) {
+        if(techniquesCount > 0) {
             analysisResult.putMetric("techniques.avgDamage", totalDamage / techniquesCount);
         }
     }

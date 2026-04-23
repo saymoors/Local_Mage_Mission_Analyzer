@@ -29,7 +29,7 @@ public class ValidatorFactory {
         IValidator currentRule = null;
 
         for(IValidator rule : rules.values()) {
-            if (firstRule == null) {
+            if(firstRule == null) {
                 firstRule = rule;
                 currentRule = rule;
             } else {

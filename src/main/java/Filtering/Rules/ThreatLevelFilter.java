@@ -13,7 +13,7 @@ public class ThreatLevelFilter extends Filter {
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if (expectedThreatLevel != mission.getCurse().getThreatLevel()) {
+        if(expectedThreatLevel != mission.getCurse().getThreatLevel()) {
             throw new Exception("Миссия не прошла фильтр по уровню угрозы!");
         }
     }

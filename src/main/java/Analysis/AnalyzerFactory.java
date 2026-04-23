@@ -25,7 +25,7 @@ public class AnalyzerFactory {
         IAnalyzer currentAnalyzer = null;
 
         for (IAnalyzer analyzer : analyzers.values()) {
-            if (firstAnalyzer == null) {
+            if(firstAnalyzer == null) {
                 firstAnalyzer = analyzer;
                 currentAnalyzer = analyzer;
             } else {

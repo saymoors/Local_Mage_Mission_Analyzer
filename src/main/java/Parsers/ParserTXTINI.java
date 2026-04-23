@@ -24,7 +24,7 @@ public class ParserTXTINI extends BaseParser {
         int techniqueIndex = -1;
 
         for (String line : data) {
-            if (line.startsWith("[") && line.endsWith("]")) {
+            if(line.startsWith("[") && line.endsWith("]")) {
                 currentSection = line.substring(1, line.length() - 1).trim();
 
                 switch (currentSection) {
@@ -37,7 +37,7 @@ public class ParserTXTINI extends BaseParser {
                 continue;
             }
 
-            if (currentSection == null) {
+            if(currentSection == null) {
                 throw new Exception("Строка вне секции: " + line);
             }
 

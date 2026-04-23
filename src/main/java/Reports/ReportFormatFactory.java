@@ -1,5 +1,10 @@
 package Reports;
 
+import Reports.Formats.DetailedReportFormat;
+import Reports.Formats.RiskReportFormat;
+import Reports.Formats.StatisticsReportFormat;
+import Reports.Formats.SummaryReportFormat;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,7 +35,7 @@ public class ReportFormatFactory {
     public IReportFormat createReportFormat(String reportType) throws Exception {
         IReportFormat reportFormat = reportFormats.get(reportType);
 
-        if (reportFormat == null) {
+        if(reportFormat == null) {
             throw new Exception("Вы не выбрали тип отчета!");
         }
 

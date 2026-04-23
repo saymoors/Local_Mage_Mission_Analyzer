@@ -58,7 +58,7 @@ public class MainMenu extends JFrame {
             try {
                 int choice = chooser.showOpenDialog(this);
 
-                if (choice == JFileChooser.APPROVE_OPTION) {
+                if(choice == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
                     logPublisher.publish("GUI", "Выбран файл: " + file.getAbsolutePath());
 
@@ -93,7 +93,7 @@ public class MainMenu extends JFrame {
             radioButton.setActionCommand(reportFormat);
             radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            if (reportFormat.equals(reportFormatFactory.getDefaultReportType())) {
+            if(reportFormat.equals(reportFormatFactory.getDefaultReportType())) {
                 radioButton.setSelected(true);
             }
 
@@ -121,13 +121,13 @@ public class MainMenu extends JFrame {
         logPublisher.publish("PARSER", "Миссия успешно прочитана");
 
         IValidator missionValidationChain = validatorFactory.createValidationChain();
-        if (missionValidationChain != null) {
+        if(missionValidationChain != null) {
             missionValidationChain.validate(mission);
             logPublisher.publish("VALIDATION", "Миссия отвалидирована");
         }
 
         IFilter missionFilterChain = createFilterChain(isFilterOn);
-        if (missionFilterChain != null) {
+        if(missionFilterChain != null) {
             missionFilterChain.filter(mission);
             logPublisher.publish("FILTER", "Миссия отфильтрована");
         } else {
@@ -138,7 +138,7 @@ public class MainMenu extends JFrame {
     }
 
     private IFilter createFilterChain(boolean isFilterOn) throws Exception {
-        if (!isFilterOn) {
+        if(!isFilterOn) {
             return null;
         }
 
@@ -161,7 +161,7 @@ public class MainMenu extends JFrame {
 
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) {
+                if(file.isDirectory()) {
                     return true;
                 }
 

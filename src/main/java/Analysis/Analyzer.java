@@ -15,7 +15,7 @@ public abstract class Analyzer implements IAnalyzer {
     public final void analyze(Mission mission, AnalysisResult analysisResult) throws Exception {
         check(mission, analysisResult);
 
-        if (nextAnalyzer != null) {
+        if(nextAnalyzer != null) {
             nextAnalyzer.analyze(mission, analysisResult);
         }
     }

@@ -42,17 +42,17 @@ public class MissionDirector {
                 .comment(source.getComment());
 
         Curse curse = source.getCurse();
-        if (curse != null) {
+        if(curse != null) {
             builder.curse(curse.getName(), curse.getThreatLevel());
         }
 
-        if (source.getSorcerers() != null) {
+        if(source.getSorcerers() != null) {
             for (Sorcerer sorcerer : source.getSorcerers()) {
                 builder.addSorcerer(sorcerer.getName(), sorcerer.getRank());
             }
         }
 
-        if (source.getTechniques() != null) {
+        if(source.getTechniques() != null) {
             for (Technique technique : source.getTechniques()) {
                 builder.addTechnique(
                         technique.getName(),
@@ -99,7 +99,7 @@ public class MissionDirector {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            if (key == null || key.isBlank()) {
+            if(key == null || key.isBlank()) {
                 continue;
             }
 
@@ -112,82 +112,82 @@ public class MissionDirector {
                 case "notes" -> notes = asString(value);
                 case "comment" -> comment = asString(value);
                 default -> {
-                    if (key.startsWith("curse.")) {
+                    if(key.startsWith("curse.")) {
                         applyCurseField(key, value, curseDraft);
                         continue;
                     }
 
-                    if (key.startsWith("economicAssessment.")) {
+                    if(key.startsWith("economicAssessment.")) {
                         applyEconomicAssessmentField(key, value, economicAssessmentDraft);
                         continue;
                     }
 
-                    if (key.startsWith("enemyActivity.attackPatterns[")) {
+                    if(key.startsWith("enemyActivity.attackPatterns[")) {
                         applyStringListField(key, value, "enemyActivity.attackPatterns", attackPatterns);
                         continue;
                     }
 
-                    if (key.startsWith("enemyActivity.countermeasuresUsed[")) {
+                    if(key.startsWith("enemyActivity.countermeasuresUsed[")) {
                         applyStringListField(key, value, "enemyActivity.countermeasuresUsed", countermeasuresUsed);
                         continue;
                     }
 
-                    if (key.startsWith("enemyActivity.")) {
+                    if(key.startsWith("enemyActivity.")) {
                         applyEnemyActivityField(key, value, enemyActivityDraft);
                         continue;
                     }
 
-                    if (key.startsWith("environmentConditions.")) {
+                    if(key.startsWith("environmentConditions.")) {
                         applyEnvironmentConditionsField(key, value, environmentConditionsDraft);
                         continue;
                     }
 
-                    if (key.startsWith("civilianImpact.")) {
+                    if(key.startsWith("civilianImpact.")) {
                         applyCivilianImpactField(key, value, civilianImpactDraft);
                         continue;
                     }
 
-                    if (key.startsWith("sorcerers[")) {
+                    if(key.startsWith("sorcerers[")) {
                         applySorcererField(key, value, sorcerers);
                         continue;
                     }
 
-                    if (key.startsWith("techniques[")) {
+                    if(key.startsWith("techniques[")) {
                         applyTechniqueField(key, value, techniques);
                         continue;
                     }
 
-                    if (key.startsWith("operationTimeline[")) {
+                    if(key.startsWith("operationTimeline[")) {
                         applyTimelineField(key, value, timeline);
                         continue;
                     }
 
-                    if (key.startsWith("operationTags[")) {
+                    if(key.startsWith("operationTags[")) {
                         applyStringListField(key, value, "operationTags", operationTags);
                         continue;
                     }
 
-                    if (key.startsWith("supportUnits[")) {
+                    if(key.startsWith("supportUnits[")) {
                         applyStringListField(key, value, "supportUnits", supportUnits);
                         continue;
                     }
 
-                    if (key.startsWith("recommendations[")) {
+                    if(key.startsWith("recommendations[")) {
                         applyStringListField(key, value, "recommendations", recommendations);
                         continue;
                     }
 
-                    if (key.startsWith("artifactsRecovered[")) {
+                    if(key.startsWith("artifactsRecovered[")) {
                         applyStringListField(key, value, "artifactsRecovered", artifactsRecovered);
                         continue;
                     }
 
-                    if (key.startsWith("evacuationZones[")) {
+                    if(key.startsWith("evacuationZones[")) {
                         applyStringListField(key, value, "evacuationZones", evacuationZones);
                         continue;
                     }
 
-                    if (key.startsWith("statusEffects[")) {
+                    if(key.startsWith("statusEffects[")) {
                         applyStringListField(key, value, "statusEffects", statusEffects);
                         continue;
                     }
@@ -205,11 +205,11 @@ public class MissionDirector {
                 .notes(notes)
                 .comment(comment);
 
-        if (curseDraft.hasData()) {
+        if(curseDraft.hasData()) {
             builder.curse(curseDraft.name, curseDraft.threatLevel);
         }
 
-        if (economicAssessmentDraft.hasData()) {
+        if(economicAssessmentDraft.hasData()) {
             builder.economicAssessment(
                     economicAssessmentDraft.totalDamageCost,
                     economicAssessmentDraft.infrastructureDamage,
@@ -220,7 +220,7 @@ public class MissionDirector {
             );
         }
 
-        if (enemyActivityDraft.hasData()) {
+        if(enemyActivityDraft.hasData()) {
             builder.enemyActivity(
                     enemyActivityDraft.behaviorType,
                     enemyActivityDraft.targetPriority,
@@ -231,7 +231,7 @@ public class MissionDirector {
             );
         }
 
-        if (environmentConditionsDraft.hasData()) {
+        if(environmentConditionsDraft.hasData()) {
             builder.environmentConditions(
                     environmentConditionsDraft.weather,
                     environmentConditionsDraft.timeOfDay,
@@ -240,7 +240,7 @@ public class MissionDirector {
             );
         }
 
-        if (civilianImpactDraft.hasData()) {
+        if(civilianImpactDraft.hasData()) {
             builder.civilianImpact(
                     civilianImpactDraft.evacuated,
                     civilianImpactDraft.injured,
@@ -389,7 +389,7 @@ public class MissionDirector {
         int openBracket = key.indexOf('[', prefixStart - prefix.length());
         int closeBracket = key.indexOf(']', openBracket);
 
-        if (openBracket < 0 || closeBracket < 0) {
+        if(openBracket < 0 || closeBracket < 0) {
             throw new Exception("Некорректное индексированное поле: " + key);
         }
 
@@ -404,7 +404,7 @@ public class MissionDirector {
         int closeBracket = key.indexOf(']', prefix.length());
         int dot = key.indexOf('.', closeBracket);
 
-        if (closeBracket < 0 || dot < 0 || dot + 1 >= key.length()) {
+        if(closeBracket < 0 || dot < 0 || dot + 1 >= key.length()) {
             throw new Exception("Некорректное индексированное поле: " + key);
         }
 
@@ -412,7 +412,7 @@ public class MissionDirector {
     }
 
     private String asString(Object value) {
-        if (value == null) {
+        if(value == null) {
             return null;
         }
 
@@ -424,11 +424,11 @@ public class MissionDirector {
     }
 
     private int asInt(Object value, String field) throws Exception {
-        if (value == null) {
+        if(value == null) {
             return 0;
         }
 
-        if (value instanceof Number number) {
+        if(value instanceof Number number) {
             return number.intValue();
         }
 
@@ -440,16 +440,16 @@ public class MissionDirector {
     }
 
     private boolean asBoolean(Object value, String field) throws Exception {
-        if (value == null) {
+        if(value == null) {
             return false;
         }
 
-        if (value instanceof Boolean booleanValue) {
+        if(value instanceof Boolean booleanValue) {
             return booleanValue;
         }
 
         String text = asString(value);
-        if ("true".equalsIgnoreCase(text) || "false".equalsIgnoreCase(text)) {
+        if("true".equalsIgnoreCase(text) || "false".equalsIgnoreCase(text)) {
             return Boolean.parseBoolean(text);
         }
 
@@ -457,11 +457,11 @@ public class MissionDirector {
     }
 
     private <T extends Enum<T>> T parseEnum(Class<T> enumType, Object value, String field) throws Exception {
-        if (value == null) {
+        if(value == null) {
             return null;
         }
 
-        if (enumType.isInstance(value)) {
+        if(enumType.isInstance(value)) {
             return enumType.cast(value);
         }
 
@@ -476,7 +476,7 @@ public class MissionDirector {
         List<String> result = new ArrayList<>();
 
         for (String value : storage.values()) {
-            if (value != null && !value.isBlank()) {
+            if(value != null && !value.isBlank()) {
                 result.add(value);
             }
         }

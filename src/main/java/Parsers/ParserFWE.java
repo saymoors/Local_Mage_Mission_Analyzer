@@ -59,7 +59,7 @@ public class ParserFWE extends BaseParser {
                 case "ENEMY_ACTION" -> {
                     putPartIfAbsent(fields, "enemyActivity.behaviorType", parts, 1);
 
-                    if (parts.length > 2) {
+                    if(parts.length > 2) {
                         String attackPattern = parts[2].isBlank() ? parts[1] : parts[1] + ": " + parts[2];
                         TextMissionParserSupport.put(fields, "enemyActivity.attackPatterns[" + attackPatternIndex++ + "]", attackPattern);
                     }
@@ -77,20 +77,20 @@ public class ParserFWE extends BaseParser {
     }
 
     private void putPart(Map<String, Object> fields, String key, String[] parts, int index) {
-        if (index < parts.length) {
+        if(index < parts.length) {
             TextMissionParserSupport.put(fields, key, parts[index]);
         }
     }
 
     private void putPartIfAbsent(Map<String, Object> fields, String key, String[] parts, int index) {
-        if (!fields.containsKey(key)) {
+        if(!fields.containsKey(key)) {
             putPart(fields, key, parts, index);
         }
     }
 
     private void applyKeyValuePairs(Map<String, Object> fields, String[] parts, int startIndex, String prefix) throws Exception {
         for (int i = startIndex; i < parts.length; i++) {
-            if (!parts[i].contains("=")) {
+            if(!parts[i].contains("=")) {
                 continue;
             }
 

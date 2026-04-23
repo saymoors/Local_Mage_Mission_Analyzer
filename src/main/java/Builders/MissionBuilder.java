@@ -83,7 +83,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addSorcerer(Sorcerer sorcerer) {
-        if (mission.getSorcerers() == null) {
+        if(mission.getSorcerers() == null) {
             mission.setSorcerers(new ArrayList<>());
         }
         mission.getSorcerers().add(sorcerer);
@@ -103,7 +103,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addTechnique(Technique technique) {
-        if (mission.getTechniques() == null) {
+        if(mission.getTechniques() == null) {
             mission.setTechniques(new ArrayList<>());
         }
         mission.getTechniques().add(technique);
@@ -215,7 +215,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addOperationTimelineEvent(OperationTimelineEvent event) {
-        if (mission.getOperationTimeline() == null) {
+        if(mission.getOperationTimeline() == null) {
             mission.setOperationTimeline(new ArrayList<>());
         }
         mission.getOperationTimeline().add(event);
@@ -239,7 +239,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addOperationTag(String operationTag) {
-        if (mission.getOperationTags() == null) {
+        if(mission.getOperationTags() == null) {
             mission.setOperationTags(new ArrayList<>());
         }
         mission.getOperationTags().add(operationTag);
@@ -254,7 +254,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addSupportUnit(String supportUnit) {
-        if (mission.getSupportUnits() == null) {
+        if(mission.getSupportUnits() == null) {
             mission.setSupportUnits(new ArrayList<>());
         }
         mission.getSupportUnits().add(supportUnit);
@@ -269,7 +269,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addRecommendation(String recommendation) {
-        if (mission.getRecommendations() == null) {
+        if(mission.getRecommendations() == null) {
             mission.setRecommendations(new ArrayList<>());
         }
         mission.getRecommendations().add(recommendation);
@@ -290,7 +290,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addArtifactRecovered(String artifactRecovered) {
-        if (mission.getArtifactsRecovered() == null) {
+        if(mission.getArtifactsRecovered() == null) {
             mission.setArtifactsRecovered(new ArrayList<>());
         }
         mission.getArtifactsRecovered().add(artifactRecovered);
@@ -305,7 +305,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addEvacuationZone(String evacuationZone) {
-        if (mission.getEvacuationZones() == null) {
+        if(mission.getEvacuationZones() == null) {
             mission.setEvacuationZones(new ArrayList<>());
         }
         mission.getEvacuationZones().add(evacuationZone);
@@ -320,7 +320,7 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public MissionBuilder addStatusEffect(String statusEffect) {
-        if (mission.getStatusEffects() == null) {
+        if(mission.getStatusEffects() == null) {
             mission.setStatusEffects(new ArrayList<>());
         }
         mission.getStatusEffects().add(statusEffect);
@@ -335,39 +335,39 @@ public class MissionBuilder implements IMissionBuilder {
 
     @Override
     public Mission build() throws Exception {
-        if (mission.getSorcerers() == null) {
+        if(mission.getSorcerers() == null) {
             mission.setSorcerers(new ArrayList<>());
         }
 
-        if (mission.getTechniques() == null) {
+        if(mission.getTechniques() == null) {
             mission.setTechniques(new ArrayList<>());
         }
 
-        if (mission.getOperationTimeline() == null) {
+        if(mission.getOperationTimeline() == null) {
             mission.setOperationTimeline(new ArrayList<>());
         }
 
-        if (mission.getOperationTags() == null) {
+        if(mission.getOperationTags() == null) {
             mission.setOperationTags(new ArrayList<>());
         }
 
-        if (mission.getSupportUnits() == null) {
+        if(mission.getSupportUnits() == null) {
             mission.setSupportUnits(new ArrayList<>());
         }
 
-        if (mission.getRecommendations() == null) {
+        if(mission.getRecommendations() == null) {
             mission.setRecommendations(new ArrayList<>());
         }
 
-        if (mission.getArtifactsRecovered() == null) {
+        if(mission.getArtifactsRecovered() == null) {
             mission.setArtifactsRecovered(new ArrayList<>());
         }
 
-        if (mission.getEvacuationZones() == null) {
+        if(mission.getEvacuationZones() == null) {
             mission.setEvacuationZones(new ArrayList<>());
         }
 
-        if (mission.getStatusEffects() == null) {
+        if(mission.getStatusEffects() == null) {
             mission.setStatusEffects(new ArrayList<>());
         }
 

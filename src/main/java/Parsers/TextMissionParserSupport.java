@@ -25,7 +25,7 @@ public class TextMissionParserSupport {
         )) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) {
+                if(!line.isBlank()) {
                     lines.add(line.trim());
                 }
             }
@@ -37,7 +37,7 @@ public class TextMissionParserSupport {
     public static KeyValue splitKeyValue(String line, char delimiter) throws Exception {
         int delimiterIndex = line.indexOf(delimiter);
 
-        if (delimiterIndex < 0) {
+        if(delimiterIndex < 0) {
             throw new Exception("Неподдерживаемый формат строки: " + line);
         }
 
@@ -55,11 +55,11 @@ public class TextMissionParserSupport {
     }
 
     public static void put(Map<String, Object> fields, String key, Object value) {
-        if (key == null || value == null) {
+        if(key == null || value == null) {
             return;
         }
 
-        if (value instanceof String text && text.isBlank()) {
+        if(value instanceof String text && text.isBlank()) {
             return;
         }
 
@@ -68,7 +68,7 @@ public class TextMissionParserSupport {
 
     private static IndexedField parseIndexedField(String rawKey, Pattern pattern) {
         Matcher matcher = pattern.matcher(rawKey.trim());
-        if (!matcher.matches()) {
+        if(!matcher.matches()) {
             return null;
         }
 

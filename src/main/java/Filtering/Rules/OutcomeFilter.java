@@ -13,7 +13,7 @@ public class OutcomeFilter extends Filter {
 
     @Override
     protected void check(Mission mission) throws Exception {
-        if (expectedOutcome != mission.getOutcome()) {
+        if(expectedOutcome != mission.getOutcome()) {
             throw new Exception("Миссия не прошла фильтр по результату!");
         }
     }

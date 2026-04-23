@@ -16,7 +16,7 @@ public class ParserTXT extends BaseParser {
             throw new Exception("Не удалось прочитать TXT-руну: " + exception.getMessage(), exception);
         }
 
-        if (!data.isEmpty() && data.getFirst().startsWith("[")) {
+        if(!data.isEmpty() && data.getFirst().startsWith("[")) {
             return new ParserTXTINI().parse(file);
         }
 
@@ -41,7 +41,7 @@ public class ParserTXT extends BaseParser {
             }
 
             TextMissionParserSupport.IndexedField sorcererField = TextMissionParserSupport.parseSorcererKey(rawKey);
-            if (sorcererField != null) {
+            if(sorcererField != null) {
                 TextMissionParserSupport.put(
                         fields,
                         "sorcerers[" + sorcererField.index() + "]." + sorcererField.field(),
@@ -51,7 +51,7 @@ public class ParserTXT extends BaseParser {
             }
 
             TextMissionParserSupport.IndexedField techniqueField = TextMissionParserSupport.parseTechniqueKey(rawKey);
-            if (techniqueField != null) {
+            if(techniqueField != null) {
                 TextMissionParserSupport.put(
                         fields,
                         "techniques[" + techniqueField.index() + "]." + techniqueField.field(),

@@ -26,7 +26,7 @@ public class ParserFactory {
     public IParser createParser(String extension) throws Exception {
         IParser parser = parsers.get(extension.toLowerCase());
 
-        if (parser == null) {
+        if(parser == null) {
             throw new Exception("Вы выбрали иную руну!");
         }
 

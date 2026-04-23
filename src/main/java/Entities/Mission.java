@@ -199,11 +199,11 @@ public class Mission {
     }
 
     public void linkEntities() throws Exception {
-        if (sorcerers == null) {
+        if(sorcerers == null) {
             sorcerers = new ArrayList<>();
         }
 
-        if (techniques == null) {
+        if(techniques == null) {
             techniques = new ArrayList<>();
         }
 
@@ -216,14 +216,14 @@ public class Mission {
             String ownerName = technique.getOwner();
 
             for (Sorcerer sorcerer : sorcerers) {
-                if (sorcerer.getName().equals(ownerName)) {
+                if(sorcerer.getName().equals(ownerName)) {
                     sorcerer.addTechnique(technique);
                     isFound = true;
                     break;
                 }
             }
 
-            if (!isFound) {
+            if(!isFound) {
                 throw new Exception("Техника \"" + technique.getName() + "\" не имеет колдуна");
             }
         }

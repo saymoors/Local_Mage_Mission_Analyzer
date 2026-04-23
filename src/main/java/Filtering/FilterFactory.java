@@ -23,7 +23,7 @@ public class FilterFactory {
         IFilter currentFilter = null;
 
         for(IFilter filter : filters.values()) {
-            if (firstFilter == null) {
+            if(firstFilter == null) {
                 firstFilter = filter;
                 currentFilter = filter;
             } else {
