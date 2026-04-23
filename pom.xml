@@ -67,7 +67,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>archive.MissionArchiveApplication</mainClass>
+                    <mainClass>Archive.MissionArchiveApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
