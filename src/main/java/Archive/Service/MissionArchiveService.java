@@ -1,14 +1,21 @@
 package Archive.Service;
 
-import Entities.Mission;
-import Validation.IValidator;
-import Validation.ValidatorFactory;
 import Archive.Dto.MissionSummaryResponse;
 import Archive.Repository.MissionArchiveRepository;
+import Entities.Mission;
+import Parsers.IParser;
+import Parsers.ParserFactory;
+import Validation.IValidator;
+import Validation.ValidatorFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +23,7 @@ import java.util.List;
 public class MissionArchiveService {
     private final MissionArchiveRepository repository;
     private final ValidatorFactory validatorFactory = new ValidatorFactory();
+    private final ParserFactory parserFactory = new ParserFactory();
 
     public MissionArchiveService(MissionArchiveRepository repository) {
         this.repository = repository;
@@ -47,8 +55,29 @@ public class MissionArchiveService {
 
     public Mission saveMission(Mission mission) {
         validateMission(mission);
-
         return repository.save(mission);
+    }
+
+    public Mission importMission(MultipartFile file) {
+        if(file == null || file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Файл миссии отсутствует");
+        }
+
+        String format = resolveFormat(file.getOriginalFilename());
+        Path tempFile = null;
+
+        try {
+            tempFile = createTempFile(format);
+            Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+            IParser parser = parserFactory.createParser(format);
+            Mission mission = parser.parse(tempFile.toString());
+            return saveMission(mission);
+        } catch(Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        } finally {
+            deleteTempFile(tempFile);
+        }
     }
 
     private void validateMission(Mission mission) {
@@ -63,6 +92,32 @@ public class MissionArchiveService {
             mission.linkEntities();
         } catch(Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
+    private String resolveFormat(String originalFilename) {
+        int dotIndex = originalFilename.lastIndexOf('.');
+
+        if(dotIndex < 0) {
+            return "";
+        }
+
+        return originalFilename.substring(dotIndex + 1).trim().toLowerCase();
+    }
+
+    private Path createTempFile(String format) throws IOException {
+        String suffix = format.isBlank() ? "" : "." + format;
+        return Files.createTempFile("mission-import-", suffix);
+    }
+
+    private void deleteTempFile(Path tempFile) {
+        if(tempFile == null) {
+            return;
+        }
+
+        try {
+            Files.deleteIfExists(tempFile);
+        } catch(IOException _) {
         }
     }
 }
