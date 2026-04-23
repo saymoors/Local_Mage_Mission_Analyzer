@@ -26,5 +26,9 @@ public class MissionFields extends Validator {
         if(value == null) {
             throw new Exception(message);
         }
+
+        if(value instanceof String text && text.isBlank()) {
+            throw new Exception(message);
+        }
     }
 }
