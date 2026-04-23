@@ -1,9 +1,11 @@
 package Entities;
 
 import Entities.Enums.SorcererRank;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
+@JsonPropertyOrder({"name", "rank", "techniques"})
 public class Sorcerer {
     private String name;
     private SorcererRank rank;

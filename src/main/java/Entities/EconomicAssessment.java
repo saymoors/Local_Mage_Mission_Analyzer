@@ -1,5 +1,15 @@
 package Entities;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "totalDamageCost",
+        "infrastructureDamage",
+        "transportDamage",
+        "commercialDamage",
+        "recoveryEstimateDays",
+        "insuranceCovered"
+})
 public class EconomicAssessment {
     private int totalDamageCost;
     private int infrastructureDamage;

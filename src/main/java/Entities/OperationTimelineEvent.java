@@ -1,5 +1,8 @@
 package Entities;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"timestamp", "type", "description"})
 public class OperationTimelineEvent {
     private String timestamp;
     private String type;

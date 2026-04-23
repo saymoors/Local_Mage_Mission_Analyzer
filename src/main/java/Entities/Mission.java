@@ -1,10 +1,34 @@
 package Entities;
 
 import Entities.Enums.Outcome;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonPropertyOrder({
+        "missionId",
+        "date",
+        "location",
+        "outcome",
+        "damageCost",
+        "curse",
+        "sorcerers",
+        "techniques",
+        "economicAssessment",
+        "enemyActivity",
+        "environmentConditions",
+        "civilianImpact",
+        "operationTimeline",
+        "operationTags",
+        "supportUnits",
+        "recommendations",
+        "notes",
+        "artifactsRecovered",
+        "evacuationZones",
+        "statusEffects",
+        "comment"
+})
 public class Mission {
     private String missionId;
     private String date;
@@ -207,15 +231,15 @@ public class Mission {
             techniques = new ArrayList<>();
         }
 
-        for (Sorcerer sorcerer : sorcerers) {
+        for(Sorcerer sorcerer : sorcerers) {
             sorcerer.setTechniques(new ArrayList<>());
         }
 
-        for (Technique technique : techniques) {
+        for(Technique technique : techniques) {
             boolean isFound = false;
             String ownerName = technique.getOwner();
 
-            for (Sorcerer sorcerer : sorcerers) {
+            for(Sorcerer sorcerer : sorcerers) {
                 if(sorcerer.getName().equals(ownerName)) {
                     sorcerer.addTechnique(technique);
                     isFound = true;

@@ -1,7 +1,9 @@
 package Entities;
 
 import Entities.Enums.TechniqueType;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"name", "type", "owner", "damage"})
 public class Technique {
     private String name;
     private TechniqueType type;

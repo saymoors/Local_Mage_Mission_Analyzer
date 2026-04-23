@@ -2,9 +2,18 @@ package Entities;
 
 import Entities.Enums.EscalationRisk;
 import Entities.Enums.Mobility;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
+@JsonPropertyOrder({
+        "behaviorType",
+        "targetPriority",
+        "attackPatterns",
+        "mobility",
+        "escalationRisk",
+        "countermeasuresUsed"
+})
 public class EnemyActivity {
     private String behaviorType;
     private String targetPriority;

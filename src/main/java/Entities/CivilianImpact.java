@@ -1,7 +1,9 @@
 package Entities;
 
 import Entities.Enums.PublicExposureRisk;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"evacuated", "injured", "missing", "publicExposureRisk"})
 public class CivilianImpact {
     private int evacuated;
     private int injured;

@@ -1,7 +1,9 @@
 package Entities;
 
 import Entities.Enums.ThreatLevel;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"name", "threatLevel"})
 public class Curse {
     private String name;
     private ThreatLevel threatLevel;

@@ -1,7 +1,9 @@
 package Entities;
 
 import Entities.Enums.Visibility;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"weather", "timeOfDay", "visibility", "cursedEnergyDensity"})
 public class EnvironmentConditions {
     private String weather;
     private String timeOfDay;
