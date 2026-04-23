@@ -51,6 +51,22 @@ public class MissionController {
         return missionArchiveService.getMission(missionId);
     }
 
+    @GetMapping(value = "/{missionId}/report", produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(
+            summary = "Получить текстовый отчет по миссии из архива",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Отчет сформирован"),
+                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
+                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
+            }
+    )
+    public String getMissionReport(
+            @PathVariable String missionId,
+            @RequestParam(value = "type", required = false) String reportType
+    ) {
+        return missionArchiveService.getMissionReport(missionId, reportType);
+    }
+
     @PostMapping
     @Operation(
             summary = "Сохранить миссию в архив",
