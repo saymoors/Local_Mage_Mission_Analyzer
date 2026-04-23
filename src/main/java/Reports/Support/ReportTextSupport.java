@@ -2,7 +2,7 @@ package Reports.Support;
 
 import java.util.List;
 
-public class ReportTextSupport {
+public final class ReportTextSupport {
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private ReportTextSupport() {
@@ -21,7 +21,7 @@ public class ReportTextSupport {
             return;
         }
 
-        if(value instanceof String text && text.isBlank()) {
+        if(value instanceof String text && !hasText(text)) {
             return;
         }
 
@@ -33,13 +33,7 @@ public class ReportTextSupport {
     }
 
     public static void appendList(StringBuilder report, int indentLevel, String label, List<String> values) {
-        List<String> filteredValues = values == null
-                ? List.of()
-                : values.stream()
-                .filter(value -> value != null && !value.isBlank())
-                .toList();
-
-        if(filteredValues.isEmpty()) {
+        if(!hasTextItems(values)) {
             return;
         }
 
@@ -48,7 +42,7 @@ public class ReportTextSupport {
                 .append(':')
                 .append(LINE_SEPARATOR);
 
-        for (String value : filteredValues) {
+        for(String value : values) {
             report.append(indent(indentLevel + 1))
                     .append("- ")
                     .append(value)
@@ -62,6 +56,20 @@ public class ReportTextSupport {
 
     public static boolean hasItems(List<?> values) {
         return values != null && !values.isEmpty();
+    }
+
+    private static boolean hasTextItems(List<String> values) {
+        if(values == null) {
+            return false;
+        }
+
+        for(String value : values) {
+            if(hasText(value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static String indent(int indentLevel) {
