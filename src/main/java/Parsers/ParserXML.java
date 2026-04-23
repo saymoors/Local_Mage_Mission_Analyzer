@@ -21,9 +21,9 @@ public class ParserXML extends BaseParser {
         try {
             Mission readMission = xmlMapper.readValue(new File(file), Mission.class);
             return rebuildMission(readMission);
-        } catch (UnrecognizedPropertyException exception) {
+        } catch(UnrecognizedPropertyException exception) {
             throw new Exception("Неизвестное поле XML: " + exception.getPropertyName());
-        } catch (IOException exception) {
+        } catch(IOException exception) {
             throw new Exception("Не удалось прочитать XML-руну!");
         }
     }

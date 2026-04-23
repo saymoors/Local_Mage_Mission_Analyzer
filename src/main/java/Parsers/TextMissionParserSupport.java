@@ -15,16 +15,17 @@ public class TextMissionParserSupport {
     private static final Pattern SORCERER_KEY = Pattern.compile("^sorcerer\\[(\\d+)]\\.(name|rank)$");
     private static final Pattern TECHNIQUE_KEY = Pattern.compile("^technique\\[(\\d+)]\\.(name|type|owner|damage)$");
 
-    private TextMissionParserSupport() { }
+    private TextMissionParserSupport() {
+    }
 
     public static List<String> readNonEmptyLines(String file) throws IOException {
         List<String> lines = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(
+        try(BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
         )) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while((line = reader.readLine()) != null) {
                 if(!line.isBlank()) {
                     lines.add(line.trim());
                 }
@@ -75,7 +76,8 @@ public class TextMissionParserSupport {
         return new IndexedField(Integer.parseInt(matcher.group(1)), matcher.group(2));
     }
 
-    public record KeyValue(String key, String value) { }
+    public record KeyValue(String key, String value) {
+    }
 
     public static final class IndexedField {
         private final int index;

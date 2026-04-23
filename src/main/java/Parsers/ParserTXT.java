@@ -12,7 +12,7 @@ public class ParserTXT extends BaseParser {
         List<String> data;
         try {
             data = TextMissionParserSupport.readNonEmptyLines(file);
-        } catch (Exception exception) {
+        } catch(Exception exception) {
             throw new Exception("Не удалось прочитать TXT-руну: " + exception.getMessage(), exception);
         }
 
@@ -22,12 +22,12 @@ public class ParserTXT extends BaseParser {
 
         Map<String, Object> fields = new LinkedHashMap<>();
 
-        for (String line : data) {
+        for(String line : data) {
             TextMissionParserSupport.KeyValue keyValue = TextMissionParserSupport.splitKeyValue(line, ':');
             String rawKey = keyValue.key().trim();
             String value = keyValue.value();
 
-            switch (rawKey) {
+            switch(rawKey) {
                 case "missionId", "date", "location", "outcome", "damageCost", "curse.name", "curse.threatLevel" -> {
                     TextMissionParserSupport.put(fields, rawKey, value);
                     continue;

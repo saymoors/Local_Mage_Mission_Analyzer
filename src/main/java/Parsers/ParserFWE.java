@@ -13,7 +13,7 @@ public class ParserFWE extends BaseParser {
         List<String> data;
         try {
             data = TextMissionParserSupport.readNonEmptyLines(file);
-        } catch (IOException exception) {
+        } catch(IOException exception) {
             throw new Exception("Не удалось прочитать FWE-руну!");
         }
 
@@ -24,11 +24,11 @@ public class ParserFWE extends BaseParser {
         int timelineIndex = 0;
         int attackPatternIndex = 0;
 
-        for (String line : data) {
+        for(String line : data) {
             String[] parts = line.split("\\|", -1);
             String recordType = parts[0].trim();
 
-            switch (recordType) {
+            switch(recordType) {
                 case "MISSION_CREATED" -> {
                     putPart(fields, "missionId", parts, 1);
                     putPart(fields, "date", parts, 2);
@@ -89,7 +89,7 @@ public class ParserFWE extends BaseParser {
     }
 
     private void applyKeyValuePairs(Map<String, Object> fields, String[] parts, int startIndex, String prefix) throws Exception {
-        for (int i = startIndex; i < parts.length; i++) {
+        for(int i = startIndex; i < parts.length; i++) {
             if(!parts[i].contains("=")) {
                 continue;
             }
@@ -98,9 +98,9 @@ public class ParserFWE extends BaseParser {
             String key = parts[i].substring(0, equalsIndex).trim();
             String value = parts[i].substring(equalsIndex + 1);
 
-            switch (key) {
+            switch(key) {
                 case "damageCost", "evacuated", "injured", "missing" -> TextMissionParserSupport.put(fields, prefix + key, value);
-                default -> throw new Exception("Неизвестное FWE-блок: " + key);
+                default -> throw new Exception("Неизвестное FWE-поле: " + key);
             }
         }
     }

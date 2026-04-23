@@ -21,9 +21,9 @@ public class ParserJSON extends BaseParser {
         try {
             Mission readMission = objectMapper.readValue(new File(file), Mission.class);
             return rebuildMission(readMission);
-        } catch (UnrecognizedPropertyException exception) {
+        } catch(UnrecognizedPropertyException exception) {
             throw new Exception("Неизвестное поле JSON: " + exception.getPropertyName());
-        } catch (IOException exception) {
+        } catch(IOException exception) {
             throw new Exception("Не удалось прочитать JSON-руну!");
         }
     }

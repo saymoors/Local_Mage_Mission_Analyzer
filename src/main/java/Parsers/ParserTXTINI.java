@@ -13,7 +13,7 @@ public class ParserTXTINI extends BaseParser {
         List<String> data;
         try {
             data = TextMissionParserSupport.readNonEmptyLines(file);
-        } catch (IOException exception) {
+        } catch(IOException exception) {
             throw new Exception("Не удалось прочитать TXTINI-руну!");
         }
 
@@ -23,11 +23,11 @@ public class ParserTXTINI extends BaseParser {
         int sorcererIndex = -1;
         int techniqueIndex = -1;
 
-        for (String line : data) {
+        for(String line : data) {
             if(line.startsWith("[") && line.endsWith("]")) {
                 currentSection = line.substring(1, line.length() - 1).trim();
 
-                switch (currentSection) {
+                switch(currentSection) {
                     case "SORCERER" -> sorcererIndex++;
                     case "TECHNIQUE" -> techniqueIndex++;
                     case "MISSION", "CURSE", "ENVIRONMENT" -> {
@@ -45,7 +45,7 @@ public class ParserTXTINI extends BaseParser {
             String key = keyValue.key().trim();
             String value = keyValue.value();
 
-            switch (currentSection) {
+            switch(currentSection) {
                 case "MISSION" -> putMissionField(fields, key, value);
                 case "CURSE" -> putCurseField(fields, key, value);
                 case "SORCERER" -> putSorcererField(fields, sorcererIndex, key, value);
@@ -59,7 +59,7 @@ public class ParserTXTINI extends BaseParser {
     }
 
     private void putMissionField(Map<String, Object> fields, String key, String value) throws Exception {
-        switch (key) {
+        switch(key) {
             case "missionId", "date", "location", "outcome", "damageCost" ->
                     TextMissionParserSupport.put(fields, key, value);
             default -> throw new Exception("Неизвестное поле секции MISSION: " + key);
@@ -67,7 +67,7 @@ public class ParserTXTINI extends BaseParser {
     }
 
     private void putCurseField(Map<String, Object> fields, String key, String value) throws Exception {
-        switch (key) {
+        switch(key) {
             case "name" -> TextMissionParserSupport.put(fields, "curse.name", value);
             case "threatLevel" -> TextMissionParserSupport.put(fields, "curse.threatLevel", value);
             default -> throw new Exception("Неизвестное поле секции CURSE: " + key);
@@ -75,14 +75,14 @@ public class ParserTXTINI extends BaseParser {
     }
 
     private void putSorcererField(Map<String, Object> fields, int index, String key, String value) throws Exception {
-        switch (key) {
+        switch(key) {
             case "name", "rank" -> TextMissionParserSupport.put(fields, "sorcerers[" + index + "]." + key, value);
             default -> throw new Exception("Неизвестное поле секции SORCERER: " + key);
         }
     }
 
     private void putTechniqueField(Map<String, Object> fields, int index, String key, String value) throws Exception {
-        switch (key) {
+        switch(key) {
             case "name", "type", "owner", "damage" ->
                     TextMissionParserSupport.put(fields, "techniques[" + index + "]." + key, value);
             default -> throw new Exception("Неизвестное поле секции TECHNIQUE: " + key);
@@ -90,7 +90,7 @@ public class ParserTXTINI extends BaseParser {
     }
 
     private void putEnvironmentField(Map<String, Object> fields, String key, String value) throws Exception {
-        switch (key) {
+        switch(key) {
             case "weather", "timeOfDay", "visibility", "cursedEnergyDensity" ->
                     TextMissionParserSupport.put(fields, "environmentConditions." + key, value);
             default -> throw new Exception("Неизвестное поле секции ENVIRONMENT: " + key);
