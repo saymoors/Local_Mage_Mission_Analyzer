@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/missions")
-@Tag(name = "Missions", description = "Операции с миссиями в архиве")
+@Tag(name = "Missions")
 public class MissionController {
     private final MissionArchiveService missionArchiveService;
 
