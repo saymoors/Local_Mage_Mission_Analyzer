@@ -13,15 +13,15 @@ public class ReportFormatFactory {
     private final String defaultReportType;
 
     public ReportFormatFactory() {
-        register( "Краткое резюме", new SummaryReportFormat());
-        register("Детализированный отчет", new DetailedReportFormat());
-        register("Отчет по рискам", new RiskReportFormat());
-        register( "Статистический отчет", new StatisticsReportFormat());
-        defaultReportType = "Детализированный отчет";
+        register("summary", new SummaryReportFormat());
+        register("detailed", new DetailedReportFormat());
+        register("risk", new RiskReportFormat());
+        register("statistics", new StatisticsReportFormat());
+        defaultReportType = "detailed";
     }
 
     public void register(String reportType, IReportFormat reportFormat) {
-        reportFormats.put(reportType, reportFormat);
+        reportFormats.put(reportType.toLowerCase(), reportFormat);
     }
 
     public String getDefaultReportType() {
@@ -33,10 +33,10 @@ public class ReportFormatFactory {
     }
 
     public IReportFormat createReportFormat(String reportType) throws Exception {
-        IReportFormat reportFormat = reportFormats.get(reportType);
+        IReportFormat reportFormat = reportFormats.get(reportType.toLowerCase());
 
         if(reportFormat == null) {
-            throw new Exception("Вы не выбрали тип отчета!");
+            throw new Exception("Неизвестный тип отчета: " + reportType);
         }
 
         return reportFormat;
