@@ -46,6 +46,33 @@ public class MissionArchiveService {
         return archive;
     }
 
+    public Mission saveMission(Mission mission) {
+        validateMission(mission);
+        return repository.save(mission);
+    }
+
+    public Mission importMission(MultipartFile file) {
+        if(file == null || file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Файл миссии отсутствует");
+        }
+
+        String format = resolveFormat(file.getOriginalFilename());
+        Path tempFile = null;
+
+        try {
+            tempFile = createTempFile(format);
+            Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+            IParser parser = parserFactory.createParser(format);
+            Mission mission = parser.parse(tempFile.toString());
+            return saveMission(mission);
+        } catch(Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        } finally {
+            deleteTempFile(tempFile);
+        }
+    }
+
     public Mission getMission(String missionId) {
         Mission mission = repository.findByMissionId(missionId);
 
@@ -57,23 +84,6 @@ public class MissionArchiveService {
         }
 
         return mission;
-    }
-
-    public String getMissionReport(String missionId, String reportType) {
-        Mission mission = getMission(missionId);
-        String resolvedReportType = resolveReportType(reportType);
-
-        try {
-            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
-            return reportFormat.render(mission);
-        } catch(Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
-        }
-    }
-
-    public Mission saveMission(Mission mission) {
-        validateMission(mission);
-        return repository.save(mission);
     }
 
     public Mission patchMission(String missionId, JsonNode patchData) {
@@ -96,25 +106,15 @@ public class MissionArchiveService {
         }
     }
 
-    public Mission importMission(MultipartFile file) {
-        if(file == null || file.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Файл миссии отсутствует");
-        }
-
-        String format = resolveFormat(file.getOriginalFilename());
-        Path tempFile = null;
+    public String getMissionReport(String missionId, String reportType) {
+        Mission mission = getMission(missionId);
+        String resolvedReportType = resolveReportType(reportType);
 
         try {
-            tempFile = createTempFile(format);
-            Files.copy(file.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
-
-            IParser parser = parserFactory.createParser(format);
-            Mission mission = parser.parse(tempFile.toString());
-            return saveMission(mission);
+            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
+            return reportFormat.render(mission);
         } catch(Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
-        } finally {
-            deleteTempFile(tempFile);
         }
     }
 
@@ -156,15 +156,16 @@ public class MissionArchiveService {
     }
 
     private Path createTempFile(String format) throws IOException {
-        String suffix = format.isBlank() ? "" : "." + format;
-        return Files.createTempFile("mission-import-", suffix);
+        String suffix;
+        if(format.isBlank()) {
+            suffix = "";
+        } else {
+            suffix = "." + format;
+        }
+        return Files.createTempFile("mission", suffix);
     }
 
     private void deleteTempFile(Path tempFile) {
-        if(tempFile == null) {
-            return;
-        }
-
         try {
             Files.delete(tempFile);
         } catch(IOException exception) {
