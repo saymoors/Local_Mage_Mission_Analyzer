@@ -1,7 +1,5 @@
 target/
-docs/
 !.mvn/wrapper/maven-wrapper.jar
-.codex-temp
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
