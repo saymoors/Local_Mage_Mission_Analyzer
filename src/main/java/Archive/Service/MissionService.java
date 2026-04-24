@@ -1,7 +1,7 @@
 package Archive.Service;
 
 import Archive.DTO.MissionSummaryResponse;
-import Archive.Repository.MissionArchiveRepository;
+import Archive.Repository.ArchiveRepository;
 import Entities.Mission;
 import Parsers.IParser;
 import Parsers.ParserFactory;
@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MissionArchiveService {
-    private final MissionArchiveRepository repository;
+public class MissionService {
+    private final ArchiveRepository repository;
     private final ValidatorFactory validatorFactory = new ValidatorFactory();
     private final ParserFactory parserFactory = new ParserFactory();
     private final ReportFormatFactory reportFormatFactory = new ReportFormatFactory();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public MissionArchiveService(MissionArchiveRepository repository) {
+    public MissionService(ArchiveRepository repository) {
         this.repository = repository;
     }
 

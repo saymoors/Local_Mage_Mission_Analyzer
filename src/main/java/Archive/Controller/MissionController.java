@@ -1,12 +1,11 @@
 package Archive.Controller;
 
 import Archive.DTO.MissionSummaryResponse;
-import Archive.Service.MissionArchiveService;
+import Archive.Service.MissionService;
 import Entities.Mission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,9 +28,9 @@ import java.util.List;
 @RequestMapping("/api/missions")
 @Tag(name = "Missions", description = "Операции с миссиями")
 public class MissionController {
-    private final MissionArchiveService missionArchiveService;
+    private final MissionService missionArchiveService;
 
-    public MissionController(MissionArchiveService missionArchiveService) {
+    public MissionController(MissionService missionArchiveService) {
         this.missionArchiveService = missionArchiveService;
     }
 
