@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +29,7 @@ public class MissionArchiveService {
     private final ValidatorFactory validatorFactory = new ValidatorFactory();
     private final ParserFactory parserFactory = new ParserFactory();
     private final ReportFormatFactory reportFormatFactory = new ReportFormatFactory();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MissionArchiveService(MissionArchiveRepository repository) {
         this.repository = repository;
@@ -56,9 +59,41 @@ public class MissionArchiveService {
         return mission;
     }
 
+    public String getMissionReport(String missionId, String reportType) {
+        Mission mission = getMission(missionId);
+        String resolvedReportType = resolveReportType(reportType);
+
+        try {
+            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
+            return reportFormat.render(mission);
+        } catch(Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
     public Mission saveMission(Mission mission) {
         validateMission(mission);
         return repository.save(mission);
+    }
+
+    public Mission patchMission(String missionId, JsonNode patchData) {
+        Mission mission = repository.findByMissionId(missionId);
+
+        if(mission == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
+        }
+
+        if(patchData == null || patchData.isNull() || !patchData.isObject()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело PATCH-запроса должно быть JSON-объектом");
+        }
+
+        try {
+            Mission patchedMission = objectMapper.readerForUpdating(mission).readValue(patchData);
+            patchedMission.setMissionId(missionId);
+            return saveMission(patchedMission);
+        } catch(Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
     }
 
     public Mission importMission(MultipartFile file) {
@@ -80,18 +115,6 @@ public class MissionArchiveService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         } finally {
             deleteTempFile(tempFile);
-        }
-    }
-
-    public String getMissionReport(String missionId, String reportType) {
-        Mission mission = getMission(missionId);
-        String resolvedReportType = resolveReportType(reportType);
-
-        try {
-            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
-            return reportFormat.render(mission);
-        } catch(Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 
@@ -143,8 +166,9 @@ public class MissionArchiveService {
         }
 
         try {
-            Files.deleteIfExists(tempFile);
-        } catch(IOException ignored) {
+            Files.delete(tempFile);
+        } catch(IOException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 }
