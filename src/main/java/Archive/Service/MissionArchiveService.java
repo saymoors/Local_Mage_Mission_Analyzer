@@ -108,10 +108,17 @@ public class MissionArchiveService {
 
     public String getMissionReport(String missionId, String reportType) {
         Mission mission = getMission(missionId);
-        String resolvedReportType = resolveReportType(reportType);
+
+        if(mission == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
+        }
+        
+        if(reportType == null || reportType.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Параметр type обязателен");
+        }
 
         try {
-            IReportFormat reportFormat = reportFormatFactory.createReportFormat(resolvedReportType);
+            IReportFormat reportFormat = reportFormatFactory.createReportFormat(reportType.trim());
             return reportFormat.render(mission);
         } catch(Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
@@ -119,10 +126,6 @@ public class MissionArchiveService {
     }
 
     private void validateMission(Mission mission) {
-        if(mission == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело запроса с миссией отсутствует");
-        }
-
         IValidator validator = validatorFactory.createValidationChain();
 
         try {
@@ -145,14 +148,6 @@ public class MissionArchiveService {
         }
 
         return originalFilename.substring(dotIndex + 1);
-    }
-
-    private String resolveReportType(String reportType) {
-        if(reportType == null || reportType.isBlank()) {
-            return reportFormatFactory.getDefaultReportType();
-        }
-
-        return reportType;
     }
 
     private Path createTempFile(String format) throws IOException {

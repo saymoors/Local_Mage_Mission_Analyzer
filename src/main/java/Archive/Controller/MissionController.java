@@ -113,9 +113,7 @@ public class MissionController {
                     @ApiResponse(responseCode = "404", description = "Миссия не найдена")
             }
     )
-    public String getMissionReport(
-            @PathVariable String missionId,
-            @RequestParam(value = "type", required = false) String reportType
+    public String getMissionReport(@PathVariable String missionId, @RequestParam("type") String reportType
     ) {
         return missionArchiveService.getMissionReport(missionId, reportType);
     }
