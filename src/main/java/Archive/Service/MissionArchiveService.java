@@ -110,7 +110,7 @@ public class MissionArchiveService {
         Mission mission = getMission(missionId);
 
         if(reportType == null || reportType.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Параметр type обязателен");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Параметр reportType обязателен");
         }
 
         try {
