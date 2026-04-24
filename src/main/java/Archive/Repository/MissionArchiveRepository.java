@@ -1,13 +1,10 @@
 package Archive.Repository;
 
 import Entities.Mission;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface MissionArchiveRepository {
-    Mission save(Mission mission);
-
+@Repository
+public interface MissionArchiveRepository extends JpaRepository<Mission, String> {
     Mission findByMissionId(String missionId);
-
-    List<Mission> findAll();
 }

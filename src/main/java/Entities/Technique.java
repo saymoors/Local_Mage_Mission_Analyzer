@@ -2,12 +2,25 @@ package Entities;
 
 import Entities.Enums.TechniqueType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
+@Embeddable
 @JsonPropertyOrder({"name", "type", "owner", "damage"})
 public class Technique {
+    @Column(name = "name")
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private TechniqueType type;
+
+    @Column(name = "owner")
     private String owner;
+
+    @Column(name = "damage")
     private int damage;
 
     public Technique() { }

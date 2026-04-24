@@ -2,13 +2,25 @@ package Entities;
 
 import Entities.Enums.SorcererRank;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Transient;
 
 import java.util.List;
 
+@Embeddable
 @JsonPropertyOrder({"name", "rank", "techniques"})
 public class Sorcerer {
+    @Column(name = "name")
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rank")
     private SorcererRank rank;
+
+    @Transient
     private List<Technique> techniques;
 
     public Sorcerer() { }

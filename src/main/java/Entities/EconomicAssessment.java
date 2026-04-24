@@ -1,7 +1,10 @@
 package Entities;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 @JsonPropertyOrder({
         "totalDamageCost",
         "infrastructureDamage",
@@ -11,11 +14,22 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "insuranceCovered"
 })
 public class EconomicAssessment {
+    @Column(name = "economic_total_damage_cost")
     private int totalDamageCost;
+
+    @Column(name = "economic_infrastructure_damage")
     private int infrastructureDamage;
+
+    @Column(name = "economic_transport_damage")
     private int transportDamage;
+
+    @Column(name = "economic_commercial_damage")
     private int commercialDamage;
+
+    @Column(name = "economic_recovery_estimate_days")
     private int recoveryEstimateDays;
+
+    @Column(name = "economic_insurance_covered")
     private boolean insuranceCovered;
 
     public EconomicAssessment() { }

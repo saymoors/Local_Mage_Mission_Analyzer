@@ -11,6 +11,7 @@ import Validation.IValidator;
 import Validation.ValidatorFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.JsonNode;
@@ -35,6 +36,7 @@ public class MissionArchiveService {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     public List<MissionSummaryResponse> getArchive() {
         List<Mission> missions = repository.findAll();
         List<MissionSummaryResponse> archive = new ArrayList<>();
@@ -46,11 +48,14 @@ public class MissionArchiveService {
         return archive;
     }
 
+    @Transactional
     public Mission saveMission(Mission mission) {
         validateMission(mission);
-        return repository.save(mission);
+        Mission savedMission = repository.save(mission);
+        return prepareLoadedMission(savedMission);
     }
 
+    @Transactional
     public Mission importMission(MultipartFile file) {
         if(file == null || file.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Файл миссии отсутствует");
@@ -73,6 +78,7 @@ public class MissionArchiveService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Mission getMission(String missionId) {
         Mission mission = repository.findByMissionId(missionId);
 
@@ -83,15 +89,12 @@ public class MissionArchiveService {
             );
         }
 
-        return mission;
+        return prepareLoadedMission(mission);
     }
 
+    @Transactional
     public Mission patchMission(String missionId, JsonNode patchData) {
-        Mission mission = repository.findByMissionId(missionId);
-
-        if(mission == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
-        }
+        Mission mission = getMission(missionId);
 
         if(patchData == null || patchData.isNull() || !patchData.isObject()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело PATCH-запроса должно быть JSON-объектом");
@@ -106,6 +109,7 @@ public class MissionArchiveService {
         }
     }
 
+    @Transactional(readOnly = true)
     public String getMissionReport(String missionId, String reportType) {
         Mission mission = getMission(missionId);
 
@@ -122,6 +126,10 @@ public class MissionArchiveService {
     }
 
     private void validateMission(Mission mission) {
+        if(mission == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело миссии отсутствует");
+        }
+
         IValidator validator = validatorFactory.createValidationChain();
 
         try {
@@ -166,6 +174,37 @@ public class MissionArchiveService {
         try {
             Files.delete(tempFile);
         } catch(IOException _) {
+        }
+    }
+
+    private Mission prepareLoadedMission(Mission mission) {
+        touch(mission.getSorcerers());
+        touch(mission.getTechniques());
+        touch(mission.getOperationTimeline());
+        touch(mission.getOperationTags());
+        touch(mission.getSupportUnits());
+        touch(mission.getRecommendations());
+        touch(mission.getArtifactsRecovered());
+        touch(mission.getEvacuationZones());
+        touch(mission.getStatusEffects());
+
+        if(mission.getEnemyActivity() != null) {
+            touch(mission.getEnemyActivity().getAttackPatterns());
+            touch(mission.getEnemyActivity().getCountermeasuresUsed());
+        }
+
+        try {
+            mission.linkEntities();
+        } catch(Exception exception) {
+            throw new IllegalStateException("Загруженная миссия имеет несогласованные данные", exception);
+        }
+
+        return mission;
+    }
+
+    private void touch(List<?> values) {
+        if(values != null) {
+            values.size();
         }
     }
 }

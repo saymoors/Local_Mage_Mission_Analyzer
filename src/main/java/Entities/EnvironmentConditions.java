@@ -2,12 +2,25 @@ package Entities;
 
 import Entities.Enums.Visibility;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
+@Embeddable
 @JsonPropertyOrder({"weather", "timeOfDay", "visibility", "cursedEnergyDensity"})
 public class EnvironmentConditions {
+    @Column(name = "environment_weather")
     private String weather;
+
+    @Column(name = "environment_time_of_day")
     private String timeOfDay;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "environment_visibility")
     private Visibility visibility;
+
+    @Column(name = "environment_cursed_energy_density")
     private int cursedEnergyDensity;
 
     public EnvironmentConditions() { }

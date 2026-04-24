@@ -36,48 +36,25 @@ public class MissionController {
     }
 
     @GetMapping
-    @Operation(
-            summary = "Получить список миссий",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Список миссий получен")
-            }
-    )
+    @Operation(summary = "Получить список миссий")
     public List<MissionSummaryResponse> getArchive() {
         return missionArchiveService.getArchive();
     }
 
     @PostMapping
-    @Operation(
-            summary = "Сохранить миссию",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия сохранена"),
-                    @ApiResponse(responseCode = "400", description = "Ошибка валидации миссии")
-            }
-    )
+    @Operation(summary = "Сохранить миссию")
     public Mission saveMission(@RequestBody Mission mission) {
         return missionArchiveService.saveMission(mission);
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(
-            summary = "Импортировать миссию из файла",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия импортирована и сохранена"),
-                    @ApiResponse(responseCode = "400", description = "Ошибка чтения или валидации файла")
-            }
-    )
+    @Operation(summary = "Импортировать миссию из файла")
     public Mission importMission(@RequestParam("file") MultipartFile file) {
         return missionArchiveService.importMission(file);
     }
 
     @GetMapping("/{missionId}")
-    @Operation(
-            summary = "Получить миссию",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия найдена"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
-    )
+    @Operation(summary = "Получить миссию")
     public Mission getMission(@PathVariable String missionId) {
         return missionArchiveService.getMission(missionId);
     }
@@ -93,39 +70,20 @@ public class MissionController {
                                     value = "{\n  \"damageCost\": 1100000\n}"
                             )
                     )
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия обновлена"),
-                    @ApiResponse(responseCode = "400", description = "Ошибка частичного обновления"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
+            )
     )
     public Mission patchMission(@PathVariable String missionId, @RequestBody JsonNode patchData) {
         return missionArchiveService.patchMission(missionId, patchData);
     }
 
     @GetMapping(value = "/{missionId}/textreport", produces = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(
-            summary = "Сформировать отчет по миссии",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Отчет сформирован"),
-                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
-    )
+    @Operation(summary = "Сформировать отчет по миссии")
     public String getTextMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
         return missionArchiveService.getMissionReport(missionId, reportType);
     }
 
     @GetMapping(value = "/{missionId}/filereport", produces = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(
-            summary = "Сформировать файловый отчет по миссии",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Файл отчета сформирован"),
-                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
-    )
+    @Operation(summary = "Сформировать файловый отчет по миссии")
     public ResponseEntity<byte[]> getFileMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
         String report = missionArchiveService.getMissionReport(missionId, reportType);
         String fileName = "mission[" + missionId + "](" + reportType + ").txt";

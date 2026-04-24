@@ -2,10 +2,26 @@ package Entities;
 
 import Entities.Enums.Outcome;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "missions")
 @JsonPropertyOrder({
         "missionId",
         "date",
@@ -30,26 +46,119 @@ import java.util.List;
         "comment"
 })
 public class Mission {
+    @Id
+    @Column(name = "mission_id", nullable = false, length = 100)
     private String missionId;
+
+    @Column(name = "mission_date")
     private String date;
+
     private String location;
+
+    @Enumerated(EnumType.STRING)
     private Outcome outcome;
+
+    @Column(name = "damage_cost")
     private int damageCost;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "curse_name")),
+            @AttributeOverride(name = "threatLevel", column = @Column(name = "curse_threat_level"))
+    })
     private Curse curse;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_sorcerers", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
     private List<Sorcerer> sorcerers;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_techniques", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
     private List<Technique> techniques;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "totalDamageCost", column = @Column(name = "economic_total_damage_cost")),
+            @AttributeOverride(name = "infrastructureDamage", column = @Column(name = "economic_infrastructure_damage")),
+            @AttributeOverride(name = "transportDamage", column = @Column(name = "economic_transport_damage")),
+            @AttributeOverride(name = "commercialDamage", column = @Column(name = "economic_commercial_damage")),
+            @AttributeOverride(name = "recoveryEstimateDays", column = @Column(name = "economic_recovery_estimate_days")),
+            @AttributeOverride(name = "insuranceCovered", column = @Column(name = "economic_insurance_covered"))
+    })
     private EconomicAssessment economicAssessment;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "behaviorType", column = @Column(name = "enemy_behavior_type")),
+            @AttributeOverride(name = "targetPriority", column = @Column(name = "enemy_target_priority")),
+            @AttributeOverride(name = "mobility", column = @Column(name = "enemy_mobility")),
+            @AttributeOverride(name = "escalationRisk", column = @Column(name = "enemy_escalation_risk"))
+    })
     private EnemyActivity enemyActivity;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "weather", column = @Column(name = "environment_weather")),
+            @AttributeOverride(name = "timeOfDay", column = @Column(name = "environment_time_of_day")),
+            @AttributeOverride(name = "visibility", column = @Column(name = "environment_visibility")),
+            @AttributeOverride(name = "cursedEnergyDensity", column = @Column(name = "environment_cursed_energy_density"))
+    })
     private EnvironmentConditions environmentConditions;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "evacuated", column = @Column(name = "civilian_evacuated")),
+            @AttributeOverride(name = "injured", column = @Column(name = "civilian_injured")),
+            @AttributeOverride(name = "missing", column = @Column(name = "civilian_missing")),
+            @AttributeOverride(name = "publicExposureRisk", column = @Column(name = "civilian_public_exposure_risk"))
+    })
     private CivilianImpact civilianImpact;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_timeline_events", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
     private List<OperationTimelineEvent> operationTimeline;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_operation_tags", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> operationTags;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_support_units", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> supportUnits;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_recommendations", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> recommendations;
+
     private String notes;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_artifacts_recovered", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> artifactsRecovered;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_evacuation_zones", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> evacuationZones;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "mission_status_effects", joinColumns = @JoinColumn(name = "mission_id"))
+    @OrderColumn(name = "order_index")
+    @Column(name = "item_value")
     private List<String> statusEffects;
+
     private String comment;
 
     public Mission() { }
