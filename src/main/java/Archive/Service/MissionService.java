@@ -9,6 +9,7 @@ import Reports.IReportFormat;
 import Reports.ReportFormatFactory;
 import Validation.IValidator;
 import Validation.ValidatorFactory;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,8 @@ public class MissionService {
     @Transactional
     public Mission saveMission(Mission mission) {
         validateMission(mission);
-        return repository.save(mission);
+        Mission savedMission = repository.save(mission);
+        return prepareLoadedMission(savedMission);
     }
 
     @Transactional
@@ -85,7 +87,7 @@ public class MissionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
         }
 
-        return mission;
+        return prepareLoadedMission(mission);
     }
 
     @Transactional
@@ -170,6 +172,37 @@ public class MissionService {
         try {
             Files.delete(tempFile);
         } catch(IOException _) {
+        }
+    }
+
+    private Mission prepareLoadedMission(Mission mission) {
+        initialize(mission.getSorcerers());
+        initialize(mission.getTechniques());
+        initialize(mission.getOperationTimeline());
+        initialize(mission.getOperationTags());
+        initialize(mission.getSupportUnits());
+        initialize(mission.getRecommendations());
+        initialize(mission.getArtifactsRecovered());
+        initialize(mission.getEvacuationZones());
+        initialize(mission.getStatusEffects());
+
+        if(mission.getEnemyActivity() != null) {
+            initialize(mission.getEnemyActivity().getAttackPatterns());
+            initialize(mission.getEnemyActivity().getCountermeasuresUsed());
+        }
+
+        try {
+            mission.linkEntities();
+        } catch(Exception exception) {
+            throw new IllegalStateException("Загруженная миссия имеет несогласованные данные", exception);
+        }
+
+        return mission;
+    }
+
+    private void initialize(Object value) {
+        if(value != null) {
+            Hibernate.initialize(value);
         }
     }
 }
