@@ -109,10 +109,6 @@ public class MissionArchiveService {
     public String getMissionReport(String missionId, String reportType) {
         Mission mission = getMission(missionId);
 
-        if(mission == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
-        }
-        
         if(reportType == null || reportType.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Параметр type обязателен");
         }
@@ -152,19 +148,24 @@ public class MissionArchiveService {
 
     private Path createTempFile(String format) throws IOException {
         String suffix;
+
         if(format.isBlank()) {
             suffix = "";
         } else {
             suffix = "." + format;
         }
+
         return Files.createTempFile("mission", suffix);
     }
 
     private void deleteTempFile(Path tempFile) {
+        if(tempFile == null) {
+            return;
+        }
+
         try {
             Files.delete(tempFile);
-        } catch(IOException exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        } catch(IOException _) {
         }
     }
 }
