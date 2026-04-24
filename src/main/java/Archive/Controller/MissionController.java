@@ -1,6 +1,6 @@
 package Archive.Controller;
 
-import Archive.Dto.MissionSummaryResponse;
+import Archive.DTO.MissionSummaryResponse;
 import Archive.Service.MissionArchiveService;
 import Entities.Mission;
 import io.swagger.v3.oas.annotations.Operation;

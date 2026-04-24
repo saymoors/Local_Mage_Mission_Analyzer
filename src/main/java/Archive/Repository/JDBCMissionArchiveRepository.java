@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
+public class JDBCMissionArchiveRepository implements MissionArchiveRepository {
     private final String jdbcUrl;
     private final String jdbcUsername;
     private final String jdbcPassword;
 
-    public JdbcMissionArchiveRepository(
+    public JDBCMissionArchiveRepository(
             @Value("${archive.jdbc.url}") String jdbcUrl,
             @Value("${archive.jdbc.username}") String jdbcUsername,
             @Value("${archive.jdbc.password}") String jdbcPassword

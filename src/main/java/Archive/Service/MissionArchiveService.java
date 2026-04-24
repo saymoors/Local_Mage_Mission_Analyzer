@@ -1,6 +1,6 @@
 package Archive.Service;
 
-import Archive.Dto.MissionSummaryResponse;
+import Archive.DTO.MissionSummaryResponse;
 import Archive.Repository.MissionArchiveRepository;
 import Entities.Mission;
 import Parsers.IParser;
