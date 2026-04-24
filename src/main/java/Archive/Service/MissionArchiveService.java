@@ -51,8 +51,7 @@ public class MissionArchiveService {
     @Transactional
     public Mission saveMission(Mission mission) {
         validateMission(mission);
-        Mission savedMission = repository.save(mission);
-        return prepareLoadedMission(savedMission);
+        return repository.save(mission);
     }
 
     @Transactional
@@ -86,7 +85,7 @@ public class MissionArchiveService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
         }
 
-        return prepareLoadedMission(mission);
+        return mission;
     }
 
     @Transactional
@@ -171,37 +170,6 @@ public class MissionArchiveService {
         try {
             Files.delete(tempFile);
         } catch(IOException _) {
-        }
-    }
-
-    private Mission prepareLoadedMission(Mission mission) {
-        touch(mission.getSorcerers());
-        touch(mission.getTechniques());
-        touch(mission.getOperationTimeline());
-        touch(mission.getOperationTags());
-        touch(mission.getSupportUnits());
-        touch(mission.getRecommendations());
-        touch(mission.getArtifactsRecovered());
-        touch(mission.getEvacuationZones());
-        touch(mission.getStatusEffects());
-
-        if(mission.getEnemyActivity() != null) {
-            touch(mission.getEnemyActivity().getAttackPatterns());
-            touch(mission.getEnemyActivity().getCountermeasuresUsed());
-        }
-
-        try {
-            mission.linkEntities();
-        } catch(Exception exception) {
-            throw new IllegalStateException("Загруженная миссия имеет несогласованные данные", exception);
-        }
-
-        return mission;
-    }
-
-    private void touch(List<?> values) {
-        if(values != null) {
-            values.size();
         }
     }
 }
