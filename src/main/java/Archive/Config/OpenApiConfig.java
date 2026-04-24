@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
     @Bean
     public OpenAPI missionArchiveOpenApi() {
-        return new OpenAPI().info(new Info()
-                .title("Web_Mage_Mission_Analyzer")
-                .version("1.0.0"));
+        return new OpenAPI().info(new Info().title("Web_Mage_Mission_Analyzer").version("1.0.1"));
     }
 }
