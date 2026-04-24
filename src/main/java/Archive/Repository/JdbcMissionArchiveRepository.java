@@ -63,12 +63,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
                 replaceCollections(connection, mission);
                 connection.commit();
 
-                Mission savedMission = findMission(connection, missionId);
-                if(savedMission == null) {
-                    throw new IllegalStateException("Миссия не найдена после сохранения в PostgreSQL");
-                }
-
-                return savedMission;
+                return mission;
             } catch(SQLException exception) {
                 connection.rollback();
                 throw exception;
@@ -104,10 +99,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
 
             for(String missionId : missionIds) {
                 Mission mission = findMission(connection, missionId);
-
-                if(mission != null) {
-                    missions.add(mission);
-                }
+                missions.add(mission);
             }
 
             return missions;
@@ -197,11 +189,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
         }
     }
 
-    private void fillMissionStatement(
-            PreparedStatement statement,
-            Mission mission,
-            boolean updateMode
-    ) throws SQLException {
+    private void fillMissionStatement(PreparedStatement statement, Mission mission, boolean updateMode) throws SQLException {
         Curse curse = mission.getCurse();
         EconomicAssessment economicAssessment = mission.getEconomicAssessment();
         EnemyActivity enemyActivity = mission.getEnemyActivity();
@@ -339,11 +327,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
         }
     }
 
-    private void insertTimelineEvents(
-            Connection connection,
-            String missionId,
-            List<OperationTimelineEvent> operationTimeline
-    ) throws SQLException {
+    private void insertTimelineEvents(Connection connection, String missionId, List<OperationTimelineEvent> operationTimeline) throws SQLException {
         if(operationTimeline == null || operationTimeline.isEmpty()) {
             return;
         }
@@ -368,12 +352,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
         }
     }
 
-    private void insertStringList(
-            Connection connection,
-            String tableName,
-            String missionId,
-            List<String> values
-    ) throws SQLException {
+    private void insertStringList(Connection connection, String tableName, String missionId, List<String> values) throws SQLException {
         if(values == null || values.isEmpty()) {
             return;
         }
@@ -499,13 +478,7 @@ public class JdbcMissionArchiveRepository implements MissionArchiveRepository {
     }
 
     private EnvironmentConditions mapEnvironmentConditions(ResultSet resultSet) throws SQLException {
-        if(allNull(
-                resultSet,
-                "environment_weather",
-                "environment_time_of_day",
-                "environment_visibility",
-                "environment_cursed_energy_density"
-        )) {
+        if(allNull(resultSet, "environment_weather", "environment_time_of_day", "environment_visibility", "environment_cursed_energy_density")) {
             return null;
         }
 
