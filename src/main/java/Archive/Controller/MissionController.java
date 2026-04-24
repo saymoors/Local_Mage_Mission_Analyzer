@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/missions")
-@Tag(name = "Missions", description = "Операции с миссиями в архиве")
+@Tag(name = "Missions", description = "Операции с миссиями")
 public class MissionController {
     private final MissionArchiveService missionArchiveService;
 
@@ -46,34 +46,6 @@ public class MissionController {
         return missionArchiveService.getArchive();
     }
 
-    @GetMapping("/{missionId}")
-    @Operation(
-            summary = "Получить миссию",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия найдена"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
-    )
-    public Mission getMission(@PathVariable String missionId) {
-        return missionArchiveService.getMission(missionId);
-    }
-
-    @GetMapping(value = "/{missionId}/report", produces = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(
-            summary = "Получить отчет по миссии",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Отчет сформирован"),
-                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
-                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
-            }
-    )
-    public String getMissionReport(
-            @PathVariable String missionId,
-            @RequestParam(value = "type", required = false) String reportType
-    ) {
-        return missionArchiveService.getMissionReport(missionId, reportType);
-    }
-
     @PostMapping
     @Operation(
             summary = "Сохранить миссию",
@@ -84,6 +56,30 @@ public class MissionController {
     )
     public Mission saveMission(@RequestBody Mission mission) {
         return missionArchiveService.saveMission(mission);
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Импортировать миссию из файла",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Миссия импортирована и сохранена"),
+                    @ApiResponse(responseCode = "400", description = "Ошибка чтения или валидации файла")
+            }
+    )
+    public Mission importMission(@RequestParam("file") MultipartFile file) {
+        return missionArchiveService.importMission(file);
+    }
+
+    @GetMapping("/{missionId}")
+    @Operation(
+            summary = "Получить миссию",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Миссия найдена"),
+                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
+            }
+    )
+    public Mission getMission(@PathVariable String missionId) {
+        return missionArchiveService.getMission(missionId);
     }
 
     @PatchMapping("/{missionId}")
@@ -108,15 +104,19 @@ public class MissionController {
         return missionArchiveService.patchMission(missionId, patchData);
     }
 
-    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/{missionId}/report", produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(
-            summary = "Импортировать миссию из файла",
+            summary = "Получить отчет по миссии",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Миссия импортирована и сохранена"),
-                    @ApiResponse(responseCode = "400", description = "Ошибка чтения или валидации файла")
+                    @ApiResponse(responseCode = "200", description = "Отчет сформирован"),
+                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
+                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
             }
     )
-    public Mission importMission(@RequestParam("file") MultipartFile file) {
-        return missionArchiveService.importMission(file);
+    public String getMissionReport(
+            @PathVariable String missionId,
+            @RequestParam(value = "type", required = false) String reportType
+    ) {
+        return missionArchiveService.getMissionReport(missionId, reportType);
     }
 }
