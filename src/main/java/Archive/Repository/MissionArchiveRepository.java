@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MissionArchiveRepository extends JpaRepository<Mission, String> {
-    Mission findByMissionId(String missionId);
 }

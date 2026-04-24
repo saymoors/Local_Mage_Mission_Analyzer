@@ -80,13 +80,10 @@ public class MissionArchiveService {
 
     @Transactional(readOnly = true)
     public Mission getMission(String missionId) {
-        Mission mission = repository.findByMissionId(missionId);
+        Mission mission = repository.findById(missionId).orElse(null);
 
         if(mission == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве"
-            );
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Миссия с идентификатором \"" + missionId + "\" не найдена в архиве");
         }
 
         return prepareLoadedMission(mission);
