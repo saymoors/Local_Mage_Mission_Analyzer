@@ -28,34 +28,34 @@ import java.util.List;
 @RequestMapping("/api/missions")
 @Tag(name = "Missions", description = "Операции с миссиями")
 public class MissionController {
-    private final MissionService missionArchiveService;
+    private final MissionService missionService;
 
-    public MissionController(MissionService missionArchiveService) {
-        this.missionArchiveService = missionArchiveService;
+    public MissionController(MissionService missioneService) {
+        this.missionService = missioneService;
     }
 
     @GetMapping
     @Operation(summary = "Получить список миссий")
     public List<MissionSummaryResponse> getArchive() {
-        return missionArchiveService.getArchive();
+        return missionService.getArchive();
     }
 
     @PostMapping
     @Operation(summary = "Сохранить миссию")
     public Mission saveMission(@RequestBody Mission mission) {
-        return missionArchiveService.saveMission(mission);
+        return missionService.saveMission(mission);
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Импортировать миссию из файла")
     public Mission importMission(@RequestParam("file") MultipartFile file) {
-        return missionArchiveService.importMission(file);
+        return missionService.importMission(file);
     }
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Получить миссию")
     public Mission getMission(@PathVariable String missionId) {
-        return missionArchiveService.getMission(missionId);
+        return missionService.getMission(missionId);
     }
 
     @PatchMapping("/{missionId}")
@@ -72,19 +72,19 @@ public class MissionController {
             )
     )
     public Mission patchMission(@PathVariable String missionId, @RequestBody JsonNode patchData) {
-        return missionArchiveService.patchMission(missionId, patchData);
+        return missionService.patchMission(missionId, patchData);
     }
 
     @GetMapping(value = "/{missionId}/textreport", produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(summary = "Сформировать отчет по миссии")
     public String getTextMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
-        return missionArchiveService.getMissionReport(missionId, reportType);
+        return missionService.getMissionReport(missionId, reportType);
     }
 
     @GetMapping(value = "/{missionId}/filereport", produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(summary = "Сформировать файловый отчет по миссии")
     public ResponseEntity<byte[]> getFileMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
-        String report = missionArchiveService.getMissionReport(missionId, reportType);
+        String report = missionService.getMissionReport(missionId, reportType);
         String fileName = "mission[" + missionId + "](" + reportType + ").txt";
         byte[] reportBytes = report.getBytes(StandardCharsets.UTF_8);
 
