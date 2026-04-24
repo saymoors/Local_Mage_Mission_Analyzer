@@ -104,17 +104,36 @@ public class MissionController {
         return missionArchiveService.patchMission(missionId, patchData);
     }
 
-    @GetMapping(value = "/{missionId}/report", produces = MediaType.TEXT_PLAIN_VALUE)
+    @GetMapping(value = "/{missionId}/textreport", produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(
-            summary = "Получить отчет по миссии",
+            summary = "Сформировать отчет по миссии",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Отчет сформирован"),
                     @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
                     @ApiResponse(responseCode = "404", description = "Миссия не найдена")
             }
     )
-    public String getMissionReport(@PathVariable String missionId, @RequestParam("type") String reportType
-    ) {
+    public String getTextMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
         return missionArchiveService.getMissionReport(missionId, reportType);
+    }
+
+    @GetMapping(value = "/{missionId}/filereport", produces = MediaType.TEXT_PLAIN_VALUE)
+    @Operation(
+            summary = "Сформировать файловый отчет по миссии",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Файл отчета сформирован"),
+                    @ApiResponse(responseCode = "400", description = "Неизвестный тип отчета"),
+                    @ApiResponse(responseCode = "404", description = "Миссия не найдена")
+            }
+    )
+    public ResponseEntity<byte[]> getFileMissionReport(@PathVariable String missionId, @RequestParam String reportType) {
+        String report = missionArchiveService.getMissionReport(missionId, reportType);
+        String fileName = "mission[" + missionId + "](" + reportType + ").txt";
+        byte[] reportBytes = report.getBytes(StandardCharsets.UTF_8);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(new MediaType("text", "plain", StandardCharsets.UTF_8))
+                .body(reportBytes);
     }
 }
