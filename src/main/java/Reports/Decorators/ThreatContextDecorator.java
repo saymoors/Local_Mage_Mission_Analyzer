@@ -17,14 +17,15 @@ public class ThreatContextDecorator extends ReportDecorator {
         EnemyActivity enemyActivity = mission.getEnemyActivity();
         EnvironmentConditions environmentConditions = mission.getEnvironmentConditions();
         CivilianImpact civilianImpact = mission.getCivilianImpact();
+        boolean hasEnemyActivityData = hasEnemyActivityData(enemyActivity);
 
-        if(enemyActivity == null && environmentConditions == null && civilianImpact == null) {
+        if(!hasEnemyActivityData && environmentConditions == null && civilianImpact == null) {
             return;
         }
 
         ReportTextSupport.appendSectionTitle(report, "Контекст угрозы");
 
-        if(enemyActivity != null) {
+        if(hasEnemyActivityData) {
             report.append("  Активность противника:").append(System.lineSeparator());
             ReportTextSupport.appendField(report, 2, "behaviorType", enemyActivity.getBehaviorType());
             ReportTextSupport.appendField(report, 2, "targetPriority", enemyActivity.getTargetPriority());
@@ -49,5 +50,18 @@ public class ThreatContextDecorator extends ReportDecorator {
             ReportTextSupport.appendField(report, 2, "missing", civilianImpact.getMissing());
             ReportTextSupport.appendField(report, 2, "publicExposureRisk", civilianImpact.getPublicExposureRisk());
         }
+    }
+
+    private boolean hasEnemyActivityData(EnemyActivity enemyActivity) {
+        if(enemyActivity == null) {
+            return false;
+        }
+
+        return ReportTextSupport.hasText(enemyActivity.getBehaviorType())
+                || ReportTextSupport.hasText(enemyActivity.getTargetPriority())
+                || enemyActivity.getMobility() != null
+                || enemyActivity.getEscalationRisk() != null
+                || ReportTextSupport.hasItems(enemyActivity.getAttackPatterns())
+                || ReportTextSupport.hasItems(enemyActivity.getCountermeasuresUsed());
     }
 }
