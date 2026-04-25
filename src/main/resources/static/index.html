@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Archive Hub</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="page-shell">
+    <header class="hero">
+        <div class="hero__content">
+            <p class="eyebrow">Tokyo Jujutsu Mission Archive</p>
+            <h1>Mission Archive Hub</h1>
+            <p class="hero__lead">
+                Минимальный веб-интерфейс для загрузки миссий, просмотра архива, чтения записей
+                и быстрого формирования отчетов.
+            </p>
+        </div>
+        <div class="hero__actions">
+            <a class="ghost-link" href="/swagger-ui.html" target="_blank" rel="noreferrer">Открыть Swagger UI</a>
+            <button id="refreshArchiveButton" class="ghost-button" type="button">Обновить архив</button>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <section class="panel panel--upload">
+            <div class="panel__header">
+                <p class="panel__kicker">Импорт</p>
+                <h2>Загрузка миссии</h2>
+            </div>
+
+            <label class="file-picker" for="missionFile">
+                <span class="file-picker__label">Файл миссии</span>
+                <input id="missionFile" type="file" name="file">
+            </label>
+
+            <div class="panel__actions">
+                <button id="importButton" class="primary-button" type="button">Импортировать</button>
+            </div>
+
+            <div id="uploadStatus" class="status-card status-card--neutral">
+                Выберите файл миссии и нажмите «Импортировать».
+            </div>
+
+            <div class="report-box">
+                <div class="panel__header">
+                    <p class="panel__kicker">Отчеты</p>
+                    <h2>Отчет по выбранной миссии</h2>
+                </div>
+
+                <div class="report-box__grid">
+                    <label>
+                        <span>Выбранная миссия</span>
+                        <input id="selectedMissionId" type="text" readonly placeholder="Сначала выберите миссию">
+                    </label>
+
+                    <label>
+                        <span>Тип отчета</span>
+                        <select id="reportType">
+                            <option value="summary">summary</option>
+                            <option value="detailed">detailed</option>
+                            <option value="risk">risk</option>
+                            <option value="statistics">statistics</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="panel__actions">
+                    <button id="showReportButton" class="secondary-button" type="button">Показать текст</button>
+                    <button id="downloadReportButton" class="secondary-button" type="button">Скачать .txt</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel panel--archive">
+            <div class="panel__header">
+                <p class="panel__kicker">Архив</p>
+                <h2>Сохраненные миссии</h2>
+            </div>
+
+            <div id="archiveList" class="archive-list">
+                <p class="placeholder">Архив еще не загружен.</p>
+            </div>
+        </section>
+
+        <section class="panel panel--details">
+            <div class="panel__header">
+                <p class="panel__kicker">Вывод</p>
+                <h2>Содержимое миссии</h2>
+            </div>
+
+            <div id="missionSummary" class="mission-summary placeholder-card">
+                Выберите запись из архива или импортируйте новую миссию.
+            </div>
+
+            <pre id="missionOutput" class="code-view">Ожидание данных...</pre>
+
+            <div class="panel__header panel__header--spaced">
+                <p class="panel__kicker">Текстовый отчет</p>
+                <h2>Предпросмотр</h2>
+            </div>
+            <pre id="reportOutput" class="code-view code-view--report">Отчет пока не сформирован.</pre>
+        </section>
+    </main>
+</div>
+
+<script src="/app.js" defer></script>
+</body>
+</html>
